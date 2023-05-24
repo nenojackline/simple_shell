@@ -2,7 +2,7 @@
 
 ## Description :pen:
 
-A simple UNIX command interpreter written as part of the low-level programming and algorithm track at [ALX Software engineering program] (https://www.alxafrica.com/software-engineering-cert/).In this project we are tasked with creating our own simple UNIX command interpreter. The program must have the exact same output as sh (/bin/sh) as well as the exact same error output. The only difference is when you print an error, the name of the program must be equivalent to your argv[0].
+A simple UNIX command interpreter written as part of the low-level programming and algorithm track at [ALX Software engineering program] (https://www.alxafrica.com/software-engineering-cert/).In this project we are tasked with creating our own simple UNIX command interpreter. The program must have the exact same output as sh (/bin/sh) as well as the exact same error output. The only difference is when you print an error, the name of the program must be equivalent to your fnargv[0].
 
 ## General Requirements
 
@@ -62,8 +62,8 @@ A simple UNIX command interpreter written as part of the low-level programming a
 **List of built-ins**
 #### Currently the list of built-ins I wrote is:
 - cd [directory]
-#### Switch to the specified directory (path).
-- env
+#### Switch to the specified directory (fnpath).
+- fnenv
 #### Displays the environment variable
 - exit [exitstatus]
 #### Exit from the program with exitstatus value. 0 by default.
@@ -71,7 +71,7 @@ A simple UNIX command interpreter written as part of the low-level programming a
 #### Return the value of the NAME variable if it is in the environment
 - help [command]
 #### Displays the syntax for the command, or all commands.
-- history
+- fnhistory
 #### Displays the last typed user.
 - echo [$$] or [$?] or [$PATH] Return pid and exit statue and PATH.
 **Command**

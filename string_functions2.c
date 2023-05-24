@@ -24,42 +24,42 @@ char *_fn_strncopy(char *dest, char *src)
 
 /**
  * _fn_strndup - duplicates a string
- * @str: the string to duplicate
+ * @fnstr: the string to duplicate
  *
  * Return: pointer to the duplicated string
  */
-char *_fn_strndup(const char *str)
+char *_fn_strndup(const char *fnstr)
 {
 	int length = 0;
 	char *ret;
 
-	if (str == NULL)
+	if (fnstr == NULL)
 		return (NULL);
-	while (*str++)
+	while (*fnstr++)
 		length++;
 	ret = malloc(sizeof(char) * (length + 1));
 	if (!ret)
 		return (NULL);
 	for (length++; length--;)
-		ret[length] = *--str;
+		ret[length] = *--fnstr;
 	return (ret);
 }
 
 /**
  *_fn_puts - prints an input string
- *@str: the string to be printed
+ *@fnstr: the string to be printed
  *
  * Return: Nothing
  */
-void _fn_puts(char *str)
+void _fn_puts(char *fnstr)
 {
 	int i = 0;
 
-	if (!str)
+	if (!fnstr)
 		return;
-	while (str[i] != '\0')
+	while (fnstr[i] != '\0')
 	{
-		_fn_putchar(str[i]);
+		_fn_putchar(fnstr[i]);
 		i++;
 	}
 }
@@ -74,14 +74,14 @@ void _fn_puts(char *str)
 int _fn_putchar(char c)
 {
 	static int i;
-	static char buf[WRITE_BUF_SIZE];
+	static char buf[W_BUFFER_SIZE];
 
-	if (c == BUF_FLUSH || i >= WRITE_BUF_SIZE)
+	if (c == BUFFER_FLUSH || i >= W_BUFFER_SIZE)
 	{
 		write(1, buf, i);
 		i = 0;
 	}
-	if (c != BUF_FLUSH)
+	if (c != BUFFER_FLUSH)
 		buf[i++] = c;
 	return (1);
 }

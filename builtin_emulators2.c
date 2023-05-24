@@ -1,7 +1,7 @@
 #include "shell.h"
 
 /**
- * _fnhistory - displays the history list, one command by line, preceded
+ * _fnhistory - displays the fnhistory list, one command by line, preceded
  *              with line numbers, starting at 0.
  * @info: Structure containing potential arguments. Used to maintain
  *        constant function prototype.
@@ -9,57 +9,57 @@
  */
 int _fnhistory(fninfopass_t *info)
 {
-	fnPrintLists(info->history);
+	fnPrintLists(info->fnhistory);
 	return (0);
 }
 
 /**
- * unset_alias - sets alias to string
+ * unset_alias - sets fnalias to string
  * @info: parameter struct
- * @str: the string alias
+ * @fnstr: the string fnalias
  *
  * Return: Always 0 on success, 1 on error
  */
-int unset_alias(fninfopass_t *info, char *str)
+int unset_alias(fninfopass_t *info, char *fnstr)
 {
 	char *p, c;
 	int ret;
 
-	p = _fn_strngchr(str, '=');
+	p = _fn_strngchr(fnstr, '=');
 	if (!p)
 		return (1);
 	c = *p;
 	*p = 0;
-	ret = fnDeleteNodeAtIndex(&(info->alias),
-		fnGetNodeIndex(info->alias, fnNodeStartsWith(info->alias, str, -1)));
+	ret = fnDeleteNodeAtIndex(&(info->fnalias),
+		fnGetNodeIndex(info->fnalias, fnNodeStartsWith(info->fnalias, fnstr, -1)));
 	*p = c;
 	return (ret);
 }
 
 /**
- * set_alias - sets alias to string
+ * set_alias - sets fnalias to string
  * @info: parameter struct
- * @str: the string alias
+ * @fnstr: the string fnalias
  *
  * Return: Always 0 on success, 1 on error
  */
-int set_alias(fninfopass_t *info, char *str)
+int set_alias(fninfopass_t *info, char *fnstr)
 {
 	char *p;
 
-	p = _fn_strngchr(str, '=');
+	p = _fn_strngchr(fnstr, '=');
 	if (!p)
 		return (1);
 	if (!*++p)
-		return (unset_alias(info, str));
+		return (unset_alias(info, fnstr));
 
-	unset_alias(info, str);
-	return (fnAddNodeEnd(&(info->alias), str, 0) == NULL);
+	unset_alias(info, fnstr);
+	return (fnAddNodeEnd(&(info->fnalias), fnstr, 0) == NULL);
 }
 
 /**
- * print_alias - prints an alias string
- * @node: the alias node
+ * print_alias - prints an fnalias string
+ * @node: the fnalias node
  *
  * Return: Always 0 on success, 1 on error
  */
@@ -69,8 +69,8 @@ int print_alias(lst_t *node)
 
 	if (node)
 	{
-		p = _fn_strngchr(node->str, '=');
-		for (a = node->str; a <= p; a++)
+		p = _fn_strngchr(node->fnstr, '=');
+		for (a = node->fnstr; a <= p; a++)
 			_fn_putchar(*a);
 		_fn_putchar('\'');
 		_fn_puts(p + 1);
@@ -81,7 +81,7 @@ int print_alias(lst_t *node)
 }
 
 /**
- * _fnalias - mimics the alias fnbuiltin (man alias)
+ * _fnalias - mimics the fnalias fnbuiltin (man fnalias)
  * @info: Structure containing potential arguments. Used to maintain
  *          constant function prototype.
  *  Return: Always 0
@@ -92,23 +92,23 @@ int _fnalias(fninfopass_t *info)
 	char *p = NULL;
 	lst_t *node = NULL;
 
-	if (info->argc == 1)
+	if (info->fnargc == 1)
 	{
-		node = info->alias;
+		node = info->fnalias;
 		while (node)
 		{
 			print_alias(node);
-			node = node->next;
+			node = node->fnnext;
 		}
 		return (0);
 	}
-	for (i = 1; info->argv[i]; i++)
+	for (i = 1; info->fnargv[i]; i++)
 	{
-		p = _fn_strngchr(info->argv[i], '=');
+		p = _fn_strngchr(info->fnargv[i], '=');
 		if (p)
-			set_alias(info, info->argv[i]);
+			set_alias(info, info->fnargv[i]);
 		else
-			print_alias(fnNodeStartsWith(info->alias, info->argv[i], '='));
+			print_alias(fnNodeStartsWith(info->fnalias, info->fnargv[i], '='));
 	}
 
 	return (0);

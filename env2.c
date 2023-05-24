@@ -1,20 +1,20 @@
 #include "shell.h"
 
 /**
- * fnget_environ - returns the string array copy of our environ
+ * fnget_environ - returns the string array copy of our fnenviron
  * @info: Structure containing potential arguments. Used to maintain
  *          constant function prototype.
  * Return: Always 0
  */
 char **fnget_environ(fninfopass_t *info)
 {
-	if (!info->environ || info->env_changed)
+	if (!info->fnenviron || info->fnenv_changed)
 	{
-		info->environ = fnListToStrgs(info->env);
-		info->env_changed = 0;
+		info->fnenviron = fnListToStrgs(info->fnenv);
+		info->fnenv_changed = 0;
 	}
 
-	return (info->environ);
+	return (info->fnenviron);
 }
 
 /**
@@ -22,11 +22,11 @@ char **fnget_environ(fninfopass_t *info)
  * @info: Structure containing potential arguments. Used to maintain
  *        constant function prototype.
  *  Return: 1 on delete, 0 otherwise
- * @var: the string env var property
+ * @var: the string fnenv var property
  */
 int _fn_unsetenv(fninfopass_t *info, char *var)
 {
-	lst_t *node = info->env;
+	lst_t *node = info->fnenv;
 	size_t i = 0;
 	char *p;
 
@@ -35,18 +35,18 @@ int _fn_unsetenv(fninfopass_t *info, char *var)
 
 	while (node)
 	{
-		p = fn_degin_with(node->str, var);
+		p = fn_degin_with(node->fnstr, var);
 		if (p && *p == '=')
 		{
-			info->env_changed = fnDeleteNodeAtIndex(&(info->env), i);
+			info->fnenv_changed = fnDeleteNodeAtIndex(&(info->fnenv), i);
 			i = 0;
-			node = info->env;
+			node = info->fnenv;
 			continue;
 		}
-		node = node->next;
+		node = node->fnnext;
 		i++;
 	}
-	return (info->env_changed);
+	return (info->fnenv_changed);
 }
 
 /**
@@ -54,8 +54,8 @@ int _fn_unsetenv(fninfopass_t *info, char *var)
  *             or modify an existing one
  * @info: Structure containing potential arguments. Used to maintain
  *        constant function prototype.
- * @var: the string env var property
- * @value: the string env var value
+ * @var: the string fnenv var property
+ * @value: the string fnenv var value
  *  Return: Always 0
  */
 int _fn_setenv(fninfopass_t *info, char *var, char *value)
@@ -73,21 +73,21 @@ int _fn_setenv(fninfopass_t *info, char *var, char *value)
 	_fn_strncopy(buf, var);
 	_fn_strncat(buf, "=");
 	_fn_strncat(buf, value);
-	node = info->env;
+	node = info->fnenv;
 	while (node)
 	{
-		p = fn_degin_with(node->str, var);
+		p = fn_degin_with(node->fnstr, var);
 		if (p && *p == '=')
 		{
-			free(node->str);
-			node->str = buf;
-			info->env_changed = 1;
+			free(node->fnstr);
+			node->fnstr = buf;
+			info->fnenv_changed = 1;
 			return (0);
 		}
-		node = node->next;
+		node = node->fnnext;
 	}
-	fnAddNodeEnd(&(info->env), buf, 0);
+	fnAddNodeEnd(&(info->fnenv), buf, 0);
 	free(buf);
-	info->env_changed = 1;
+	info->fnenv_changed = 1;
 	return (0);
 }

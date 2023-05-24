@@ -37,11 +37,11 @@ int _fnerratoi(char *s)
  */
 void fnprnterr(fninfopass_t *info, char *estr)
 {
-	_fneputs(info->fname);
+	_fneputs(info->fnfname);
 	_fneputs(": ");
-	fnprntd(info->line_count, STDERR_FILENO);
+	fnprntd(info->fnline_count, STDERR_FILENO);
 	_fneputs(": ");
-	_fneputs(info->argv[0]);
+	_fneputs(info->fnargv[0]);
 	_fneputs(": ");
 	_fneputs(estr);
 }
@@ -87,27 +87,27 @@ int fnprntd(int input, int fd)
 
 /**
  * fncnvrtnumber - converter function, a clone of itoa
- * @num: number
+ * @fnnum: number
  * @base: base
  * @flags: argument flags
  *
  * Return: string
  */
-char *fncnvrtnumber(long int num, int base, int flags)
+char *fncnvrtnumber(long int fnnum, int base, int flags)
 {
 	static char *array;
 	static char buffer[50];
 	char sign = 0;
 	char *ptr;
-	unsigned long n = num;
+	unsigned long n = fnnum;
 
-	if (!(flags & CONVERT_UNSIGNED) && num < 0)
+	if (!(flags & CVNT_UNSD) && fnnum < 0)
 	{
-		n = -num;
+		n = -fnnum;
 		sign = '-';
 
 	}
-	array = flags & CONVERT_LOWERCASE ? "0123456789abcdef" : "0123456789ABCDEF";
+	array = flags & CVNT_LWCASE ? "0123456789abcdef" : "0123456789ABCDEF";
 	ptr = &buffer[49];
 	*ptr = '\0';
 

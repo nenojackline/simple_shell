@@ -6,10 +6,10 @@
  */
 void fnclr_info(fninfopass_t *info)
 {
-	info->arg = NULL;
-	info->argv = NULL;
-	info->path = NULL;
-	info->argc = 0;
+	info->fnarg = NULL;
+	info->fnargv = NULL;
+	info->fnpath = NULL;
+	info->fnargc = 0;
 }
 
 /**
@@ -21,23 +21,23 @@ void fnset_info(fninfopass_t *info, char **av)
 {
 	int i = 0;
 
-	info->fname = av[0];
-	if (info->arg)
+	info->fnfname = av[0];
+	if (info->fnarg)
 	{
-		info->argv = fn_strntow(info->arg, " \t");
-		if (!info->argv)
+		info->fnargv = fn_strntow(info->fnarg, " \t");
+		if (!info->fnargv)
 		{
 
-			info->argv = malloc(sizeof(char *) * 2);
-			if (info->argv)
+			info->fnargv = malloc(sizeof(char *) * 2);
+			if (info->fnargv)
 			{
-				info->argv[0] = _fn_strndup(info->arg);
-				info->argv[1] = NULL;
+				info->fnargv[0] = _fn_strndup(info->fnarg);
+				info->fnargv[1] = NULL;
 			}
 		}
-		for (i = 0; info->argv && info->argv[i]; i++)
+		for (i = 0; info->fnargv && info->fnargv[i]; i++)
 			;
-		info->argc = i;
+		info->fnargc = i;
 
 		fnReplaceAlias(info);
 		fnReplaceVars(info);
@@ -51,24 +51,24 @@ void fnset_info(fninfopass_t *info, char **av)
  */
 void fnfree_info(fninfopass_t *info, int all)
 {
-	fnffree(info->argv);
-	info->argv = NULL;
-	info->path = NULL;
+	fnffree(info->fnargv);
+	info->fnargv = NULL;
+	info->fnpath = NULL;
 	if (all)
 	{
-		if (!info->cmd_buf)
-			free(info->arg);
-		if (info->env)
-			fnFreeList(&(info->env));
-		if (info->history)
-			fnFreeList(&(info->history));
-		if (info->alias)
-			fnFreeList(&(info->alias));
-		fnffree(info->environ);
-			info->environ = NULL;
-		fnbfree((void **)info->cmd_buf);
-		if (info->readfd > 2)
-			close(info->readfd);
-		_fn_putchar(BUF_FLUSH);
+		if (!info->fncmd_buf)
+			free(info->fnarg);
+		if (info->fnenv)
+			fnFreeList(&(info->fnenv));
+		if (info->fnhistory)
+			fnFreeList(&(info->fnhistory));
+		if (info->fnalias)
+			fnFreeList(&(info->fnalias));
+		fnffree(info->fnenviron);
+			info->fnenviron = NULL;
+		fnbfree((void **)info->fncmd_buf);
+		if (info->fnreadfd > 2)
+			close(info->fnreadfd);
+		_fn_putchar(BUFFER_FLUSH);
 	}
 }

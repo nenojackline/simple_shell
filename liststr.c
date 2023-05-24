@@ -3,12 +3,12 @@
 /**
  * fnAddNode - adds a node to the start of the list
  * @head: address of pointer to head node
- * @str: str field of node
- * @num: node index used by history
+ * @fnstr: fnstr field of node
+ * @fnnum: node index used by fnhistory
  *
  * Return: size of list
  */
-lst_t *fnAddNode(lst_t **head, const char *str, int num)
+lst_t *fnAddNode(lst_t **head, const char *fnstr, int fnnum)
 {
 	lst_t *new_head;
 
@@ -18,17 +18,17 @@ lst_t *fnAddNode(lst_t **head, const char *str, int num)
 	if (!new_head)
 		return (NULL);
 	_fn_memryset((void *)new_head, 0, sizeof(lst_t));
-	new_head->num = num;
-	if (str)
+	new_head->fnnum = fnnum;
+	if (fnstr)
 	{
-		new_head->str = _fn_strndup(str);
-		if (!new_head->str)
+		new_head->fnstr = _fn_strndup(fnstr);
+		if (!new_head->fnstr)
 		{
 			free(new_head);
 			return (NULL);
 		}
 	}
-	new_head->next = *head;
+	new_head->fnnext = *head;
 	*head = new_head;
 	return (new_head);
 }
@@ -36,12 +36,12 @@ lst_t *fnAddNode(lst_t **head, const char *str, int num)
 /**
  * fnAddNodeEnd - adds a node to the end of the list
  * @head: address of pointer to head node
- * @str: str field of node
- * @num: node index used by history
+ * @fnstr: fnstr field of node
+ * @fnnum: node index used by fnhistory
  *
  * Return: size of list
  */
-lst_t *fnAddNodeEnd(lst_t **head, const char *str, int num)
+lst_t *fnAddNodeEnd(lst_t **head, const char *fnstr, int fnnum)
 {
 	lst_t *new_node, *node;
 
@@ -53,11 +53,11 @@ lst_t *fnAddNodeEnd(lst_t **head, const char *str, int num)
 	if (!new_node)
 		return (NULL);
 	_fn_memryset((void *)new_node, 0, sizeof(lst_t));
-	new_node->num = num;
-	if (str)
+	new_node->fnnum = fnnum;
+	if (fnstr)
 	{
-		new_node->str = _fn_strndup(str);
-		if (!new_node->str)
+		new_node->fnstr = _fn_strndup(fnstr);
+		if (!new_node->fnstr)
 		{
 			free(new_node);
 			return (NULL);
@@ -65,9 +65,9 @@ lst_t *fnAddNodeEnd(lst_t **head, const char *str, int num)
 	}
 	if (node)
 	{
-		while (node->next)
-			node = node->next;
-		node->next = new_node;
+		while (node->fnnext)
+			node = node->fnnext;
+		node->fnnext = new_node;
 	}
 	else
 		*head = new_node;
@@ -75,7 +75,7 @@ lst_t *fnAddNodeEnd(lst_t **head, const char *str, int num)
 }
 
 /**
- * fnPrintListStr - prints only the str element of a lst_t linked list
+ * fnPrintListStr - prints only the fnstr element of a lst_t linked list
  * @h: pointer to first node
  *
  * Return: size of list
@@ -86,9 +86,9 @@ size_t fnPrintListStr(const lst_t *h)
 
 	while (h)
 	{
-		_fn_puts(h->str ? h->str : "(nil)");
+		_fn_puts(h->fnstr ? h->fnstr : "(nil)");
 		_fn_puts("\n");
-		h = h->next;
+		h = h->fnnext;
 		i++;
 	}
 	return (i);
@@ -112,8 +112,8 @@ int fnDeleteNodeAtIndex(lst_t **head, unsigned int index)
 	if (!index)
 	{
 		node = *head;
-		*head = (*head)->next;
-		free(node->str);
+		*head = (*head)->fnnext;
+		free(node->fnstr);
 		free(node);
 		return (1);
 	}
@@ -122,14 +122,14 @@ int fnDeleteNodeAtIndex(lst_t **head, unsigned int index)
 	{
 		if (i == index)
 		{
-			prev_node->next = node->next;
-			free(node->str);
+			prev_node->fnnext = node->fnnext;
+			free(node->fnstr);
 			free(node);
 			return (1);
 		}
 		i++;
 		prev_node = node;
-		node = node->next;
+		node = node->fnnext;
 	}
 	return (0);
 }
@@ -150,8 +150,8 @@ void fnFreeList(lst_t **head_ptr)
 	node = head;
 	while (node)
 	{
-		next_node = node->next;
-		free(node->str);
+		next_node = node->fnnext;
+		free(node->fnstr);
 		free(node);
 		node = next_node;
 	}

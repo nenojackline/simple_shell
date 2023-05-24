@@ -15,11 +15,11 @@ ssize_t input_buf(fninfopass_t *info, char **buf, size_t *len)
 
 	if (!*len) /* if nothing left in the buffer, fill it */
 	{
-		/*fnbfree((void **)info->cmd_buf);*/
+		/*fnbfree((void **)info->fncmd_buf);*/
 		free(*buf);
 		*buf = NULL;
 		signal(SIGINT, fnsigintHandler);
-#if USE_GETLINE
+#if FNUSE_GETLN
 		r = getline(buf, &len_p, stdin);
 #else
 		r = _fngetline(info, buf, &len_p);
@@ -31,13 +31,13 @@ ssize_t input_buf(fninfopass_t *info, char **buf, size_t *len)
 				(*buf)[r - 1] = '\0'; /* remove trailing newline */
 				r--;
 			}
-			info->linecount_flag = 1;
+			info->fnlinecount_flag = 1;
 			fndelcomments(*buf);
-			fnbuildHistoryList(info, *buf, info->histcount++);
+			fnbuildHistoryList(info, *buf, info->fnhistcount++);
 			/* if (_fn_strngchr(*buf, ';')) is this a command chain? */
 			{
 				*len = r;
-				info->cmd_buf = buf;
+				info->fncmd_buf = buf;
 			}
 		}
 	}
@@ -55,9 +55,9 @@ ssize_t fngetinput(fninfopass_t *info)
 	static char *buf; /* the ';' command chain buffer */
 	static size_t i, j, len;
 	ssize_t r = 0;
-	char **buf_p = &(info->arg), *p;
+	char **buf_p = &(info->fnarg), *p;
 
-	_fn_putchar(BUF_FLUSH);
+	_fn_putchar(BUFFER_FLUSH);
 	r = input_buf(info, &buf, &len);
 	if (r == -1) /* EOF */
 		return (-1);
@@ -78,7 +78,7 @@ ssize_t fngetinput(fninfopass_t *info)
 		if (i >= len) /* reached end of buffer? */
 		{
 			i = len = 0; /* reset position and length */
-			info->cmd_buf_type = CMD_NORM;
+			info->fncmd_buf_type = FN_COMD_NORM;
 		}
 
 		*buf_p = p; /* pass back pointer to current command position */
@@ -103,14 +103,14 @@ ssize_t read_buf(fninfopass_t *info, char *buf, size_t *i)
 
 	if (*i)
 		return (0);
-	r = read(info->readfd, buf, READ_BUF_SIZE);
+	r = read(info->fnreadfd, buf, R_BUFFER_SIZE);
 	if (r >= 0)
 		*i = r;
 	return (r);
 }
 
 /**
- * _fngetline - gets the next line of input from STDIN
+ * _fngetline - gets the fnnext line of input from STDIN
  * @info: parameter struct
  * @ptr: address of pointer to buffer, preallocated or NULL
  * @length: size of preallocated ptr buffer if not NULL
@@ -119,7 +119,7 @@ ssize_t read_buf(fninfopass_t *info, char *buf, size_t *i)
  */
 int _fngetline(fninfopass_t *info, char **ptr, size_t *length)
 {
-	static char buf[READ_BUF_SIZE];
+	static char buf[R_BUFFER_SIZE];
 	static size_t i, len;
 	size_t k;
 	ssize_t r = 0, s = 0;
@@ -166,5 +166,5 @@ void fnsigintHandler(__attribute__((unused))int sig_num)
 {
 	_fn_puts("\n");
 	_fn_puts("$ ");
-	_fn_putchar(BUF_FLUSH);
+	_fn_putchar(BUFFER_FLUSH);
 }

@@ -3,16 +3,16 @@
 /**
  * fn_is_command - determines if a file is an executable command
  * @info: the info struct
- * @path: path to the file
+ * @fnpath: fnpath to the file
  *
  * Return: 1 if true, 0 otherwise
  */
-int fn_is_command(fninfopass_t *info, char *path)
+int fn_is_command(fninfopass_t *info, char *fnpath)
 {
 	struct stat st;
 
 	(void)info;
-	if (!path || stat(path, &st))
+	if (!fnpath || stat(fnpath, &st))
 		return (0);
 
 	if (st.st_mode & S_IFREG)
@@ -48,12 +48,12 @@ char *fn_duplicate_chars(char *pathstr, int start, int stop)
  * @pathstr: the PATH string
  * @cmd: the cmd to find
  *
- * Return: full path of cmd if found or NULL
+ * Return: full fnpath of cmd if found or NULL
  */
 char *fn_fnd_path(fninfopass_t *info, char *pathstr, char *cmd)
 {
 	int i = 0, curr_pos = 0;
-	char *path;
+	char *fnpath;
 
 	if (!pathstr)
 		return (NULL);
@@ -66,16 +66,16 @@ char *fn_fnd_path(fninfopass_t *info, char *pathstr, char *cmd)
 	{
 		if (!pathstr[i] || pathstr[i] == ':')
 		{
-			path = fn_duplicate_chars(pathstr, curr_pos, i);
-			if (!*path)
-				_fn_strncat(path, cmd);
+			fnpath = fn_duplicate_chars(pathstr, curr_pos, i);
+			if (!*fnpath)
+				_fn_strncat(fnpath, cmd);
 			else
 			{
-				_fn_strncat(path, "/");
-				_fn_strncat(path, cmd);
+				_fn_strncat(fnpath, "/");
+				_fn_strncat(fnpath, cmd);
 			}
-			if (fn_is_command(info, path))
-				return (path);
+			if (fn_is_command(info, fnpath))
+				return (fnpath);
 			if (!pathstr[i])
 				break;
 			curr_pos = i;

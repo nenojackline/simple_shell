@@ -1,98 +1,98 @@
-#ifndef SHELL_H
-#define SHELL_H
+#ifndef SHELL_HEADER
+#define SHELL_HEADER
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <limits.h>
+#include <fcntl.h>
+#include <errno.h>
 #include <unistd.h>
 #include <string.h>
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <sys/stat.h>
-#include <limits.h>
-#include <fcntl.h>
-#include <errno.h>
 
 /* for read/write buffers */
-#define READ_BUF_SIZE 1024
-#define WRITE_BUF_SIZE 1024
-#define BUF_FLUSH -1
+#define R_BUFFER_SIZE 1024
+#define W_BUFFER_SIZE 1024
+#define BUFFER_FLUSH -1
 
 /* for command chaining */
-#define CMD_NORM	0
-#define CMD_OR		1
-#define CMD_AND		2
-#define CMD_CHAIN	3
+#define FN_COMD_NORM	0
+#define FN_COMD_OR		1
+#define FN_COMD_AND		2
+#define FN_COMD_CHAIN	3
 
 /* for fncnvrtnumber() */
-#define CONVERT_LOWERCASE	1
-#define CONVERT_UNSIGNED	2
+#define CVNT_LWCASE	1
+#define CVNT_UNSD	2
 
 /* 1 if using system getline() */
-#define USE_GETLINE 0
-#define USE_STRTOK 0
+#define FNUSE_GETLN 0
+#define FNUSE_STRTOK 0
 
-#define HIST_FILE	".simple_shell_history"
-#define HIST_MAX	4096
+#define BCKPFILE	".simple_shell_history"
+#define HISTMAX	4096
 
-extern char **environ;
+extern char **fnenviron;
 
 
 /**
  * struct liststring - singly linked list
- * @num: the number field
- * @str: a string
- * @next: points to the next node
+ * @fnnum: the number field
+ * @fnstr: a string
+ * @fnnext: points to the fnnext node
  */
 typedef struct liststring
 {
-	int num;
-	char *str;
-	struct liststring *next;
+	int fnnum;
+	char *fnstr;
+	struct liststring *fnnext;
 } lst_t;
 
 /**
  *struct fnpassinfo - contains pseudo-arguements to pass into a function,
  *					allowing uniform prototype for function pointer struct
- *@arg: a string generated from getline containing arguements
- *@argv: an array of strings generated from arg
- *@path: a string path for the current command
- *@argc: the argument count
- *@line_count: the error count
- *@err_num: the error code for exit()s
- *@linecount_flag: if on count this line of input
- *@fname: the program filename
- *@env: linked list local copy of environ
- *@environ: custom modified copy of environ from LL env
- *@history: the history node
- *@alias: the alias node
- *@env_changed: on if environ was changed
- *@status: the return status of the last exec'd command
- *@cmd_buf: address of pointer to cmd_buf, on if chaining
- *@cmd_buf_type: CMD_type ||, &&, ;
- *@readfd: the fd from which to read line input
- *@histcount: the history line number count
+ *@fnarg: a string generated from getline containing arguements
+ *@fnargv: an array of strings generated from fnarg
+ *@fnpath: a string fnpath for the current command
+ *@fnargc: the argument count
+ *@fnline_count: the error count
+ *@fnerr_num: the error code for exit()s
+ *@fnlinecount_flag: if on count this line of input
+ *@fnfname: the program filename
+ *@fnenv: linked list local copy of fnenviron
+ *@fnenviron: custom modified copy of fnenviron from LL fnenv
+ *@fnhistory: the fnhistory node
+ *@fnalias: the fnalias node
+ *@fnenv_changed: on if fnenviron was changed
+ *@fnstatus: the return fnstatus of the last exec'd command
+ *@fncmd_buf: address of pointer to fncmd_buf, on if chaining
+ *@fncmd_buf_type: CMD_type ||, &&, ;
+ *@fnreadfd: the fd from which to read line input
+ *@fnhistcount: the fnhistory line number count
  */
 typedef struct fnpassinfo
 {
-	char *arg;
-	char **argv;
-	char *path;
-	int argc;
-	unsigned int line_count;
-	int err_num;
-	int linecount_flag;
-	char *fname;
-	lst_t *env;
-	lst_t *history;
-	lst_t *alias;
-	char **environ;
-	int env_changed;
-	int status;
+	char *fnarg;
+	char **fnargv;
+	char *fnpath;
+	int fnargc;
+	unsigned int fnline_count;
+	int fnerr_num;
+	int fnlinecount_flag;
+	char *fnfname;
+	lst_t *fnenv;
+	lst_t *fnhistory;
+	lst_t *fnalias;
+	char **fnenviron;
+	int fnenv_changed;
+	int fnstatus;
 
-	char **cmd_buf; /* pointer to cmd ; chain buffer, for memory mangement */
-	int cmd_buf_type; /* CMD_type ||, &&, ; */
-	int readfd;
-	int histcount;
+	char **fncmd_buf; /* pointer to cmd ; chain buffer, for memory mangement */
+	int fncmd_buf_type; /* CMD_type ||, &&, ; */
+	int fnreadfd;
+	int fnhistcount;
 } fninfopass_t;
 
 #define INFO_INIT \
@@ -117,7 +117,7 @@ int fn_fnd_builtin(fninfopass_t *);
 void fn_fnd_command(fninfopass_t *);
 void fn_frk_command(fninfopass_t *);
 
-/* path.c */
+/* fnpath.c */
 int fn_is_command(fninfopass_t *, char *);
 char *fn_duplicate_chars(char *, int, int);
 char *fn_fnd_path(fninfopass_t *, char *, char *);
@@ -129,7 +129,7 @@ int fn_lpshs(char **);
 void _fneputs(char *);
 int _fneputschar(char);
 int _fneputsfd(char c, int fd);
-int _fn_putsfd(char *str, int fd);
+int _fn_putsfd(char *fnstr, int fd);
 
 /* string_functions.c */
 int _fn_strnlen(char *);
@@ -192,7 +192,7 @@ void fnclr_info(fninfopass_t *);
 void fnset_info(fninfopass_t *, char **);
 void fnfree_info(fninfopass_t *, int);
 
-/* env.c module */
+/* fnenv.c module */
 char *_fngetenv(fninfopass_t *, const char *);
 int _fnenv(fninfopass_t *);
 int _fnsetenv(fninfopass_t *);

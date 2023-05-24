@@ -2,8 +2,8 @@
 
 /**
  * main - entry point
- * @ac: arg count
- * @av: arg vector
+ * @ac: fnarg count
+ * @av: fnarg vector
  *
  * Return: 0 on success, 1 on error
  */
@@ -30,12 +30,12 @@ int main(int ac, char **av)
 				_fneputs(": 0: Can't open ");
 				_fneputs(av[1]);
 				_fneputschar('\n');
-				_fneputschar(BUF_FLUSH);
+				_fneputschar(BUFFER_FLUSH);
 				exit(127);
 			}
 			return (EXIT_FAILURE);
 		}
-		info->readfd = fd;
+		info->fnreadfd = fd;
 	}
 	fnpopulateEnvList(info);
 	fnread_history(info);

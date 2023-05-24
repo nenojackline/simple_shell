@@ -17,7 +17,7 @@ int fnhsh(fninfopass_t *info, char **av)
 		fnclr_info(info);
 		if (fninteractive(info))
 			_fn_puts("$ ");
-		_fneputschar(BUF_FLUSH);
+		_fneputschar(BUFFER_FLUSH);
 		r = fngetinput(info);
 		if (r != -1)
 		{
@@ -32,13 +32,13 @@ int fnhsh(fninfopass_t *info, char **av)
 	}
 	fnwrite_history(info);
 	fnfree_info(info, 1);
-	if (!fninteractive(info) && info->status)
-		exit(info->status);
+	if (!fninteractive(info) && info->fnstatus)
+		exit(info->fnstatus);
 	if (builtin_ret == -2)
 	{
-		if (info->err_num == -1)
-			exit(info->status);
-		exit(info->err_num);
+		if (info->fnerr_num == -1)
+			exit(info->fnstatus);
+		exit(info->fnerr_num);
 	}
 	return (builtin_ret);
 }
@@ -57,20 +57,20 @@ int fn_fnd_builtin(fninfopass_t *info)
 	int i, built_in_ret = -1;
 	fn_builtin_t builtintbl[] = {
 		{"exit", _fnexit},
-		{"env", _fnenv},
+		{"fnenv", _fnenv},
 		{"help", _fnhelp},
-		{"history", _fnhistory},
+		{"fnhistory", _fnhistory},
 		{"setenv", _fnsetenv},
 		{"unsetenv", _fnunsetenv},
 		{"cd", _fncd},
-		{"alias", _fnalias},
+		{"fnalias", _fnalias},
 		{NULL, NULL}
 	};
 
 	for (i = 0; builtintbl[i].type; i++)
-		if (_fn_strncmp(info->argv[0], builtintbl[i].type) == 0)
+		if (_fn_strncmp(info->fnargv[0], builtintbl[i].type) == 0)
 		{
-			info->line_count++;
+			info->fnline_count++;
 			built_in_ret = builtintbl[i].func(info);
 			break;
 		}
@@ -85,35 +85,35 @@ int fn_fnd_builtin(fninfopass_t *info)
  */
 void fn_fnd_command(fninfopass_t *info)
 {
-	char *path = NULL;
+	char *fnpath = NULL;
 	int i, k;
 
-	info->path = info->argv[0];
-	if (info->linecount_flag == 1)
+	info->fnpath = info->fnargv[0];
+	if (info->fnlinecount_flag == 1)
 	{
-		info->line_count++;
-		info->linecount_flag = 0;
+		info->fnline_count++;
+		info->fnlinecount_flag = 0;
 	}
-	for (i = 0, k = 0; info->arg[i]; i++)
-		if (!fnisdelim(info->arg[i], " \t\n"))
+	for (i = 0, k = 0; info->fnarg[i]; i++)
+		if (!fnisdelim(info->fnarg[i], " \t\n"))
 			k++;
 	if (!k)
 		return;
 
-	path = fn_fnd_path(info, _fngetenv(info, "PATH="), info->argv[0]);
-	if (path)
+	fnpath = fn_fnd_path(info, _fngetenv(info, "PATH="), info->fnargv[0]);
+	if (fnpath)
 	{
-		info->path = path;
+		info->fnpath = fnpath;
 		fn_frk_command(info);
 	}
 	else
 	{
 		if ((fninteractive(info) || _fngetenv(info, "PATH=")
-			|| info->argv[0][0] == '/') && fn_is_command(info, info->argv[0]))
+			|| info->fnargv[0][0] == '/') && fn_is_command(info, info->fnargv[0]))
 			fn_frk_command(info);
-		else if (*(info->arg) != '\n')
+		else if (*(info->fnarg) != '\n')
 		{
-			info->status = 127;
+			info->fnstatus = 127;
 			fnprnterr(info, "not found\n");
 		}
 	}
@@ -138,7 +138,7 @@ void fn_frk_command(fninfopass_t *info)
 	}
 	if (child_pid == 0)
 	{
-		if (execve(info->path, info->argv, fnget_environ(info)) == -1)
+		if (execve(info->fnpath, info->fnargv, fnget_environ(info)) == -1)
 		{
 			fnfree_info(info, 1);
 			if (errno == EACCES)
@@ -149,11 +149,11 @@ void fn_frk_command(fninfopass_t *info)
 	}
 	else
 	{
-		wait(&(info->status));
-		if (WIFEXITED(info->status))
+		wait(&(info->fnstatus));
+		if (WIFEXITED(info->fnstatus))
 		{
-			info->status = WEXITSTATUS(info->status);
-			if (info->status == 126)
+			info->fnstatus = WEXITSTATUS(info->fnstatus);
+			if (info->fnstatus == 126)
 				fnprnterr(info, "Permission denied\n");
 		}
 	}

@@ -16,18 +16,18 @@ int fnIsChain(fninfopass_t *info, char *buf, size_t *p)
 	{
 		buf[j] = 0;
 		j++;
-		info->cmd_buf_type = CMD_OR;
+		info->fncmd_buf_type = FN_COMD_OR;
 	}
 	else if (buf[j] == '&' && buf[j + 1] == '&')
 	{
 		buf[j] = 0;
 		j++;
-		info->cmd_buf_type = CMD_AND;
+		info->fncmd_buf_type = FN_COMD_AND;
 	}
 	else if (buf[j] == ';') /* found end of this command */
 	{
 		buf[j] = 0; /* replace semicolon with null */
-		info->cmd_buf_type = CMD_CHAIN;
+		info->fncmd_buf_type = FN_COMD_CHAIN;
 	}
 	else
 		return (0);
@@ -36,7 +36,7 @@ int fnIsChain(fninfopass_t *info, char *buf, size_t *p)
 }
 
 /**
- * fnCheckChain - checks we should continue chaining based on last status
+ * fnCheckChain - checks we should continue chaining based on last fnstatus
  * @info: the parameter struct
  * @buf: the char buffer
  * @p: address of current position in buf
@@ -50,17 +50,17 @@ size_t *p, size_t i, size_t len)
 {
 	size_t j = *p;
 
-	if (info->cmd_buf_type == CMD_AND)
+	if (info->fncmd_buf_type == FN_COMD_AND)
 	{
-		if (info->status)
+		if (info->fnstatus)
 		{
 			buf[i] = 0;
 			j = len;
 		}
 	}
-	if (info->cmd_buf_type == CMD_OR)
+	if (info->fncmd_buf_type == FN_COMD_OR)
 	{
-		if (!info->status)
+		if (!info->fnstatus)
 		{
 			buf[i] = 0;
 			j = len;
@@ -84,17 +84,17 @@ int fnReplaceAlias(fninfopass_t *info)
 
 	for (i = 0; i < 10; i++)
 	{
-		node = fnNodeStartsWith(info->alias, info->argv[0], '=');
+		node = fnNodeStartsWith(info->fnalias, info->fnargv[0], '=');
 		if (!node)
 			return (0);
-		free(info->argv[0]);
-		p = _fn_strngchr(node->str, '=');
+		free(info->fnargv[0]);
+		p = _fn_strngchr(node->fnstr, '=');
 		if (!p)
 			return (0);
 		p = _fn_strndup(p + 1);
 		if (!p)
 			return (0);
-		info->argv[0] = p;
+		info->fnargv[0] = p;
 	}
 	return (1);
 }
@@ -110,31 +110,31 @@ int fnReplaceVars(fninfopass_t *info)
 	int i = 0;
 	lst_t *node;
 
-	for (i = 0; info->argv[i]; i++)
+	for (i = 0; info->fnargv[i]; i++)
 	{
-		if (info->argv[i][0] != '$' || !info->argv[i][1])
+		if (info->fnargv[i][0] != '$' || !info->fnargv[i][1])
 			continue;
 
-		if (!_fn_strncmp(info->argv[i], "$?"))
+		if (!_fn_strncmp(info->fnargv[i], "$?"))
 		{
-			fnReplaceString(&(info->argv[i]),
-				_fn_strndup(fncnvrtnumber(info->status, 10, 0)));
+			fnReplaceString(&(info->fnargv[i]),
+				_fn_strndup(fncnvrtnumber(info->fnstatus, 10, 0)));
 			continue;
 		}
-		if (!_fn_strncmp(info->argv[i], "$$"))
+		if (!_fn_strncmp(info->fnargv[i], "$$"))
 		{
-			fnReplaceString(&(info->argv[i]),
+			fnReplaceString(&(info->fnargv[i]),
 				_fn_strndup(fncnvrtnumber(getpid(), 10, 0)));
 			continue;
 		}
-		node = fnNodeStartsWith(info->env, &info->argv[i][1], '=');
+		node = fnNodeStartsWith(info->fnenv, &info->fnargv[i][1], '=');
 		if (node)
 		{
-			fnReplaceString(&(info->argv[i]),
-				_fn_strndup(_fn_strngchr(node->str, '=') + 1));
+			fnReplaceString(&(info->fnargv[i]),
+				_fn_strndup(_fn_strngchr(node->fnstr, '=') + 1));
 			continue;
 		}
-		fnReplaceString(&info->argv[i], _fn_strndup(""));
+		fnReplaceString(&info->fnargv[i], _fn_strndup(""));
 
 	}
 	return (0);

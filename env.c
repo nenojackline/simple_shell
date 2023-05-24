@@ -8,28 +8,28 @@
  */
 int _fnenv(fninfopass_t *info)
 {
-	fnPrintListStr(info->env);
+	fnPrintListStr(info->fnenv);
 	return (0);
 }
 
 /**
- * _fngetenv - gets the value of an environ variable
+ * _fngetenv - gets the value of an fnenviron variable
  * @info: Structure containing potential arguments. Used to maintain
- * @name: env var name
+ * @name: fnenv var name
  *
  * Return: the value
  */
 char *_fngetenv(fninfopass_t *info, const char *name)
 {
-	lst_t *node = info->env;
+	lst_t *node = info->fnenv;
 	char *p;
 
 	while (node)
 	{
-		p = fn_degin_with(node->str, name);
+		p = fn_degin_with(node->fnstr, name);
 		if (p && *p)
 			return (p);
-		node = node->next;
+		node = node->fnnext;
 	}
 	return (NULL);
 }
@@ -43,12 +43,12 @@ char *_fngetenv(fninfopass_t *info, const char *name)
  */
 int _fnsetenv(fninfopass_t *info)
 {
-	if (info->argc != 3)
+	if (info->fnargc != 3)
 	{
 		_fneputs("Incorrect number of arguements\n");
 		return (1);
 	}
-	if (_fn_setenv(info, info->argv[1], info->argv[2]))
+	if (_fn_setenv(info, info->fnargv[1], info->fnargv[2]))
 		return (0);
 	return (1);
 }
@@ -63,19 +63,19 @@ int _fnunsetenv(fninfopass_t *info)
 {
 	int i;
 
-	if (info->argc == 1)
+	if (info->fnargc == 1)
 	{
 		_fneputs("Too few arguements.\n");
 		return (1);
 	}
-	for (i = 1; i <= info->argc; i++)
-		_fn_unsetenv(info, info->argv[i]);
+	for (i = 1; i <= info->fnargc; i++)
+		_fn_unsetenv(info, info->fnargv[i]);
 
 	return (0);
 }
 
 /**
- * fnpopulateEnvList - populates env linked list
+ * fnpopulateEnvList - populates fnenv linked list
  * @info: Structure containing potential arguments. Used to maintain
  *          constant function prototype.
  * Return: Always 0
@@ -85,8 +85,8 @@ int fnpopulateEnvList(fninfopass_t *info)
 	lst_t *node = NULL;
 	size_t i;
 
-	for (i = 0; environ[i]; i++)
-		fnAddNodeEnd(&node, environ[i], 0);
-	info->env = node;
+	for (i = 0; fnenviron[i]; i++)
+		fnAddNodeEnd(&node, fnenviron[i], 0);
+	info->fnenv = node;
 	return (0);
 }

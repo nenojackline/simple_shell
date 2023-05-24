@@ -8,7 +8,7 @@
  */
 int fninteractive(fninfopass_t *info)
 {
-	return (isatty(STDIN_FILENO) && info->readfd <= 2);
+	return (isatty(STDIN_FILENO) && info->fnreadfd <= 2);
 }
 
 /**
