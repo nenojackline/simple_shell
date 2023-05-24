@@ -22,29 +22,29 @@ char **fnget_environ(fninfopass_t *info)
  * @info: Structure containing potential arguments. Used to maintain
  *        constant function prototype.
  *  Return: 1 on delete, 0 otherwise
- * @var: the string fnenv var property
+ * @fnvar: the string fnenv fnvar property
  */
-int _fn_unsetenv(fninfopass_t *info, char *var)
+int _fn_unsetenv(fninfopass_t *info, char *fnvar)
 {
 	lst_t *node = info->fnenv;
-	size_t i = 0;
-	char *p;
+	size_t fni = 0;
+	char *fnp;
 
-	if (!node || !var)
+	if (!node || !fnvar)
 		return (0);
 
 	while (node)
 	{
-		p = fn_degin_with(node->fnstr, var);
-		if (p && *p == '=')
+		fnp = fn_degin_with(node->fnstr, fnvar);
+		if (fnp && *fnp == '=')
 		{
-			info->fnenv_changed = fnDeleteNodeAtIndex(&(info->fnenv), i);
-			i = 0;
+			info->fnenv_changed = fnDeleteNodeAtIndex(&(info->fnenv), fni);
+			fni = 0;
 			node = info->fnenv;
 			continue;
 		}
 		node = node->fnnext;
-		i++;
+		fni++;
 	}
 	return (info->fnenv_changed);
 }
@@ -54,30 +54,30 @@ int _fn_unsetenv(fninfopass_t *info, char *var)
  *             or modify an existing one
  * @info: Structure containing potential arguments. Used to maintain
  *        constant function prototype.
- * @var: the string fnenv var property
- * @value: the string fnenv var value
+ * @fnvar: the string fnenv fnvar property
+ * @fnvalue: the string fnenv fnvar fnvalue
  *  Return: Always 0
  */
-int _fn_setenv(fninfopass_t *info, char *var, char *value)
+int _fn_setenv(fninfopass_t *info, char *fnvar, char *fnvalue)
 {
 	char *buf = NULL;
 	lst_t *node;
-	char *p;
+	char *fnp;
 
-	if (!var || !value)
+	if (!fnvar || !fnvalue)
 		return (0);
 
-	buf = malloc(_fn_strnlen(var) + _fn_strnlen(value) + 2);
+	buf = malloc(_fn_strnlen(fnvar) + _fn_strnlen(fnvalue) + 2);
 	if (!buf)
 		return (1);
-	_fn_strncopy(buf, var);
+	_fn_strncopy(buf, fnvar);
 	_fn_strncat(buf, "=");
-	_fn_strncat(buf, value);
+	_fn_strncat(buf, fnvalue);
 	node = info->fnenv;
 	while (node)
 	{
-		p = fn_degin_with(node->fnstr, var);
-		if (p && *p == '=')
+		fnp = fn_degin_with(node->fnstr, fnvar);
+		if (fnp && *fnp == '=')
 		{
 			free(node->fnstr);
 			node->fnstr = buf;

@@ -22,18 +22,18 @@ int _fnhistory(fninfopass_t *info)
  */
 int unset_alias(fninfopass_t *info, char *fnstr)
 {
-	char *p, c;
-	int ret;
+	char *fnp, fnc;
+	int fnret;
 
-	p = _fn_strngchr(fnstr, '=');
-	if (!p)
+	fnp = _fn_strngchr(fnstr, '=');
+	if (!fnp)
 		return (1);
-	c = *p;
-	*p = 0;
-	ret = fnDeleteNodeAtIndex(&(info->fnalias),
+	fnc = *fnp;
+	*fnp = 0;
+	fnret = fnDeleteNodeAtIndex(&(info->fnalias),
 		fnGetNodeIndex(info->fnalias, fnNodeStartsWith(info->fnalias, fnstr, -1)));
-	*p = c;
-	return (ret);
+	*fnp = fnc;
+	return (fnret);
 }
 
 /**
@@ -45,12 +45,12 @@ int unset_alias(fninfopass_t *info, char *fnstr)
  */
 int set_alias(fninfopass_t *info, char *fnstr)
 {
-	char *p;
+	char *fnp;
 
-	p = _fn_strngchr(fnstr, '=');
-	if (!p)
+	fnp = _fn_strngchr(fnstr, '=');
+	if (!fnp)
 		return (1);
-	if (!*++p)
+	if (!*++fnp)
 		return (unset_alias(info, fnstr));
 
 	unset_alias(info, fnstr);
@@ -65,15 +65,15 @@ int set_alias(fninfopass_t *info, char *fnstr)
  */
 int print_alias(lst_t *node)
 {
-	char *p = NULL, *a = NULL;
+	char *fnp = NULL, *fna = NULL;
 
 	if (node)
 	{
-		p = _fn_strngchr(node->fnstr, '=');
-		for (a = node->fnstr; a <= p; a++)
-			_fn_putchar(*a);
+		fnp = _fn_strngchr(node->fnstr, '=');
+		for (fna = node->fnstr; fna <= fnp; fna++)
+			_fn_putchar(*fna);
 		_fn_putchar('\'');
-		_fn_puts(p + 1);
+		_fn_puts(fnp + 1);
 		_fn_puts("'\n");
 		return (0);
 	}
@@ -88,8 +88,8 @@ int print_alias(lst_t *node)
  */
 int _fnalias(fninfopass_t *info)
 {
-	int i = 0;
-	char *p = NULL;
+	int fni = 0;
+	char *fnp = NULL;
 	lst_t *node = NULL;
 
 	if (info->fnargc == 1)
@@ -102,13 +102,13 @@ int _fnalias(fninfopass_t *info)
 		}
 		return (0);
 	}
-	for (i = 1; info->fnargv[i]; i++)
+	for (fni = 1; info->fnargv[fni]; fni++)
 	{
-		p = _fn_strngchr(info->fnargv[i], '=');
-		if (p)
-			set_alias(info, info->fnargv[i]);
+		fnp = _fn_strngchr(info->fnargv[fni], '=');
+		if (fnp)
+			set_alias(info, info->fnargv[fni]);
 		else
-			print_alias(fnNodeStartsWith(info->fnalias, info->fnargv[i], '='));
+			print_alias(fnNodeStartsWith(info->fnalias, info->fnargv[fni], '='));
 	}
 
 	return (0);

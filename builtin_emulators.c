@@ -9,12 +9,12 @@
  */
 int _fnexit(fninfopass_t *info)
 {
-	int exitcheck;
+	int fnexit_check;
 
 	if (info->fnargv[1])  /* If there is an exit arguement */
 	{
-		exitcheck = _fnerratoi(info->fnargv[1]);
-		if (exitcheck == -1)
+		fnexit_check = _fnerratoi(info->fnargv[1]);
+		if (fnexit_check == -1)
 		{
 			info->fnstatus = 2;
 			fnprnterr(info, "Illegal number: ");
@@ -37,32 +37,32 @@ int _fnexit(fninfopass_t *info)
  */
 int _fncd(fninfopass_t *info)
 {
-	char *s, *dir, buffer[1024];
+	char *sp, *fndir, fnbuffer[1024];
 	int chdir_ret;
 
-	s = getcwd(buffer, 1024);
-	if (!s)
+	sp = getcwd(fnbuffer, 1024);
+	if (!sp)
 		_fn_puts("TODO: >>getcwd failure emsg here<<\n");
 	if (!info->fnargv[1])
 	{
-		dir = _fngetenv(info, "HOME=");
-		if (!dir)
+		fndir = _fngetenv(info, "HOME=");
+		if (!fndir)
 			chdir_ret = /* TODO: what should this be? */
-				chdir((dir = _fngetenv(info, "PWD=")) ? dir : "/");
+				chdir((fndir = _fngetenv(info, "PWD=")) ? fndir : "/");
 		else
-			chdir_ret = chdir(dir);
+			chdir_ret = chdir(fndir);
 	}
 	else if (_fn_strncmp(info->fnargv[1], "-") == 0)
 	{
 		if (!_fngetenv(info, "OLDPWD="))
 		{
-			_fn_puts(s);
+			_fn_puts(sp);
 			_fn_putchar('\n');
 			return (1);
 		}
 		_fn_puts(_fngetenv(info, "OLDPWD=")), _fn_putchar('\n');
 		chdir_ret = /* TODO: what should this be? */
-			chdir((dir = _fngetenv(info, "OLDPWD=")) ? dir : "/");
+			chdir((fndir = _fngetenv(info, "OLDPWD=")) ? fndir : "/");
 	}
 	else
 		chdir_ret = chdir(info->fnargv[1]);
@@ -74,7 +74,7 @@ int _fncd(fninfopass_t *info)
 	else
 	{
 		_fn_setenv(info, "OLDPWD", _fngetenv(info, "PWD="));
-		_fn_setenv(info, "PWD", getcwd(buffer, 1024));
+		_fn_setenv(info, "PWD", getcwd(fnbuffer, 1024));
 	}
 	return (0);
 }
@@ -87,11 +87,11 @@ int _fncd(fninfopass_t *info)
  */
 int _fnhelp(fninfopass_t *info)
 {
-	char **arg_array;
+	char **fnarg_array;
 
-	arg_array = info->fnargv;
+	fnarg_array = info->fnargv;
 	_fn_puts("help call works. Function not yet implemented \n");
 	if (0)
-		_fn_puts(*arg_array); /* temp att_unused workaround */
+		_fn_puts(*fnarg_array); /* temp att_unused workaround */
 	return (0);
 }

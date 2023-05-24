@@ -15,20 +15,20 @@ int _fnenv(fninfopass_t *info)
 /**
  * _fngetenv - gets the value of an environ variable
  * @info: Structure containing potential arguments. Used to maintain
- * @name: fnenv var name
+ * @fnname: fnenv var fnname
  *
  * Return: the value
  */
-char *_fngetenv(fninfopass_t *info, const char *name)
+char *_fngetenv(fninfopass_t *info, const char *fnname)
 {
 	lst_t *node = info->fnenv;
-	char *p;
+	char *fnp;
 
 	while (node)
 	{
-		p = fn_degin_with(node->fnstr, name);
-		if (p && *p)
-			return (p);
+		fnp = fn_degin_with(node->fnstr, fnname);
+		if (fnp && *fnp)
+			return (fnp);
 		node = node->fnnext;
 	}
 	return (NULL);
@@ -61,15 +61,15 @@ int _fnsetenv(fninfopass_t *info)
  */
 int _fnunsetenv(fninfopass_t *info)
 {
-	int i;
+	int fni;
 
 	if (info->fnargc == 1)
 	{
 		_fneputs("Too few arguements.\n");
 		return (1);
 	}
-	for (i = 1; i <= info->fnargc; i++)
-		_fn_unsetenv(info, info->fnargv[i]);
+	for (fni = 1; fni <= info->fnargc; fni++)
+		_fn_unsetenv(info, info->fnargv[fni]);
 
 	return (0);
 }
@@ -83,10 +83,10 @@ int _fnunsetenv(fninfopass_t *info)
 int fnpopulateEnvList(fninfopass_t *info)
 {
 	lst_t *node = NULL;
-	size_t i;
+	size_t fni;
 
-	for (i = 0; environ[i]; i++)
-		fnAddNodeEnd(&node, environ[i], 0);
+	for (fni = 0; environ[fni]; fni++)
+		fnAddNodeEnd(&node, environ[fni], 0);
 	info->fnenv = node;
 	return (0);
 }

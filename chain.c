@@ -3,71 +3,71 @@
 /**
  * fnIsChain - test if current char in buffer is a chain delimeter
  * @info: the parameter struct
- * @buf: the char buffer
- * @p: address of current position in buf
+ * @fnbuf: the char buffer
+ * @fnp: address of current position in fnbuf
  *
  * Return: 1 if chain delimeter, 0 otherwise
  */
-int fnIsChain(fninfopass_t *info, char *buf, size_t *p)
+int fnIsChain(fninfopass_t *info, char *fnbuf, size_t *fnp)
 {
-	size_t j = *p;
+	size_t fnj = *fnp;
 
-	if (buf[j] == '|' && buf[j + 1] == '|')
+	if (fnbuf[fnj] == '|' && fnbuf[fnj + 1] == '|')
 	{
-		buf[j] = 0;
-		j++;
+		fnbuf[fnj] = 0;
+		fnj++;
 		info->fncmd_buf_type = FN_COMD_OR;
 	}
-	else if (buf[j] == '&' && buf[j + 1] == '&')
+	else if (fnbuf[fnj] == '&' && fnbuf[fnj + 1] == '&')
 	{
-		buf[j] = 0;
-		j++;
+		fnbuf[fnj] = 0;
+		fnj++;
 		info->fncmd_buf_type = FN_COMD_AND;
 	}
-	else if (buf[j] == ';') /* found end of this command */
+	else if (fnbuf[fnj] == ';') /* found end of this command */
 	{
-		buf[j] = 0; /* replace semicolon with null */
+		fnbuf[fnj] = 0; /* replace semicolon with null */
 		info->fncmd_buf_type = FN_COMD_CHAIN;
 	}
 	else
 		return (0);
-	*p = j;
+	*fnp = fnj;
 	return (1);
 }
 
 /**
  * fnCheckChain - checks we should continue chaining based on last fnstatus
  * @info: the parameter struct
- * @buf: the char buffer
- * @p: address of current position in buf
- * @i: starting position in buf
- * @len: length of buf
+ * @fnbuf: the char buffer
+ * @fnp: address of current position in fnbuf
+ * @fni: starting position in fnbuf
+ * @fnlen: length of fnbuf
  *
  * Return: Void
  */
-void fnCheckChain(fninfopass_t *info, char *buf,
-size_t *p, size_t i, size_t len)
+void fnCheckChain(fninfopass_t *info, char *fnbuf,
+size_t *fnp, size_t fni, size_t fnlen)
 {
-	size_t j = *p;
+	size_t fnj = *fnp;
 
 	if (info->fncmd_buf_type == FN_COMD_AND)
 	{
 		if (info->fnstatus)
 		{
-			buf[i] = 0;
-			j = len;
+			fnbuf[fni] = 0;
+			fnj = fnlen;
 		}
 	}
 	if (info->fncmd_buf_type == FN_COMD_OR)
 	{
 		if (!info->fnstatus)
 		{
-			buf[i] = 0;
-			j = len;
+			fnbuf[fni] = 0;
+			fnj = fnlen;
 		}
 	}
 
-	*p = j;
+	*fnp = fnj;
 }
 
 /**
@@ -78,23 +78,23 @@ size_t *p, size_t i, size_t len)
  */
 int fnReplaceAlias(fninfopass_t *info)
 {
-	int i;
+	int fni;
 	lst_t *node;
-	char *p;
+	char *fnp;
 
-	for (i = 0; i < 10; i++)
+	for (fni = 0; fni < 10; fni++)
 	{
 		node = fnNodeStartsWith(info->fnalias, info->fnargv[0], '=');
 		if (!node)
 			return (0);
 		free(info->fnargv[0]);
-		p = _fn_strngchr(node->fnstr, '=');
-		if (!p)
+		fnp = _fn_strngchr(node->fnstr, '=');
+		if (!fnp)
 			return (0);
-		p = _fn_strndup(p + 1);
-		if (!p)
+		fnp = _fn_strndup(fnp + 1);
+		if (!fnp)
 			return (0);
-		info->fnargv[0] = p;
+		info->fnargv[0] = fnp;
 	}
 	return (1);
 }
@@ -107,34 +107,34 @@ int fnReplaceAlias(fninfopass_t *info)
  */
 int fnReplaceVars(fninfopass_t *info)
 {
-	int i = 0;
+	int fni = 0;
 	lst_t *node;
 
-	for (i = 0; info->fnargv[i]; i++)
+	for (fni = 0; info->fnargv[fni]; fni++)
 	{
-		if (info->fnargv[i][0] != '$' || !info->fnargv[i][1])
+		if (info->fnargv[fni][0] != '$' || !info->fnargv[fni][1])
 			continue;
 
-		if (!_fn_strncmp(info->fnargv[i], "$?"))
+		if (!_fn_strncmp(info->fnargv[fni], "$?"))
 		{
-			fnReplaceString(&(info->fnargv[i]),
+			fnReplaceString(&(info->fnargv[fni]),
 				_fn_strndup(fncnvrtnumber(info->fnstatus, 10, 0)));
 			continue;
 		}
-		if (!_fn_strncmp(info->fnargv[i], "$$"))
+		if (!_fn_strncmp(info->fnargv[fni], "$$"))
 		{
-			fnReplaceString(&(info->fnargv[i]),
+			fnReplaceString(&(info->fnargv[fni]),
 				_fn_strndup(fncnvrtnumber(getpid(), 10, 0)));
 			continue;
 		}
-		node = fnNodeStartsWith(info->fnenv, &info->fnargv[i][1], '=');
+		node = fnNodeStartsWith(info->fnenv, &info->fnargv[fni][1], '=');
 		if (node)
 		{
-			fnReplaceString(&(info->fnargv[i]),
+			fnReplaceString(&(info->fnargv[fni]),
 				_fn_strndup(_fn_strngchr(node->fnstr, '=') + 1));
 			continue;
 		}
-		fnReplaceString(&info->fnargv[i], _fn_strndup(""));
+		fnReplaceString(&info->fnargv[fni], _fn_strndup(""));
 
 	}
 	return (0);
@@ -142,14 +142,14 @@ int fnReplaceVars(fninfopass_t *info)
 
 /**
  * fnReplaceString - replaces string
- * @old: address of old string
- * @new: new string
+ * @fnold: address of fnold string
+ * @fnnew: fnnew string
  *
  * Return: 1 if replaced, 0 otherwise
  */
-int fnReplaceString(char **old, char *new)
+int fnReplaceString(char **fnold, char *fnnew)
 {
-	free(*old);
-	*old = new;
+	free(*fnold);
+	*fnold = fnnew;
 	return (1);
 }

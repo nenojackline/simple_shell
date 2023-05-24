@@ -2,74 +2,74 @@
 
 /**
  * _fn_strnlen - returns the length of a string
- * @s: the string whose length to check
+ * @fns: the string whose length to check
  *
  * Return: integer length of string
  */
-int _fn_strnlen(char *s)
+int _fn_strnlen(char *fns)
 {
-	int i = 0;
+	int fni = 0;
 
-	if (!s)
+	if (!fns)
 		return (0);
 
-	while (*s++)
-		i++;
-	return (i);
+	while (*fns++)
+		fni++;
+	return (fni);
 }
 
 /**
  * _fn_strncmp - performs lexicogarphic comparison of two strangs.
- * @s1: the first strang
- * @s2: the second strang
+ * @fns1: the first strang
+ * @fns2: the second strang
  *
- * Return: negative if s1 < s2, positive if s1 > s2, zero if s1 == s2
+ * Return: negative if fns1 < fns2, positive if fns1 > fns2, zero if fns1 == fns2
  */
-int _fn_strncmp(char *s1, char *s2)
+int _fn_strncmp(char *fns1, char *fns2)
 {
-	while (*s1 && *s2)
+	while (*fns1 && *fns2)
 	{
-		if (*s1 != *s2)
-			return (*s1 - *s2);
-		s1++;
-		s2++;
+		if (*fns1 != *fns2)
+			return (*fns1 - *fns2);
+		fns1++;
+		fns2++;
 	}
-	if (*s1 == *s2)
+	if (*fns1 == *fns2)
 		return (0);
 	else
-		return (*s1 < *s2 ? -1 : 1);
+		return (*fns1 < *fns2 ? -1 : 1);
 }
 
 /**
- * fn_degin_with - checks if needle starts with haystack
- * @haystack: string to search
- * @needle: the substring to find
+ * fn_degin_with - checks if fnneedle starts with fnhaystack
+ * @fnhaystack: string to search
+ * @fnneedle: the substring to find
  *
- * Return: address of fnnext char of haystack or NULL
+ * Return: address of fnnext char of fnhaystack or NULL
  */
-char *fn_degin_with(const char *haystack, const char *needle)
+char *fn_degin_with(const char *fnhaystack, const char *fnneedle)
 {
-	while (*needle)
-		if (*needle++ != *haystack++)
+	while (*fnneedle)
+		if (*fnneedle++ != *fnhaystack++)
 			return (NULL);
-	return ((char *)haystack);
+	return ((char *)fnhaystack);
 }
 
 /**
  * _fn_strncat - concatenates two strings
- * @dest: the destination buffer
- * @src: the source buffer
+ * @fndest: the destination buffer
+ * @fnsource: the source buffer
  *
  * Return: pointer to destination buffer
  */
-char *_fn_strncat(char *dest, char *src)
+char *_fn_strncat(char *fndest, char *fnsource)
 {
-	char *ret = dest;
+	char *fnret = fndest;
 
-	while (*dest)
-		dest++;
-	while (*src)
-		*dest++ = *src++;
-	*dest = *src;
-	return (ret);
+	while (*fndest)
+		fndest++;
+	while (*fnsource)
+		*fndest++ = *fnsource++;
+	*fndest = *fnsource;
+	return (fnret);
 }

@@ -8,78 +8,78 @@
  */
 void _fneputs(char *fnstr)
 {
-	int i = 0;
+	int fni = 0;
 
 	if (!fnstr)
 		return;
-	while (fnstr[i] != '\0')
+	while (fnstr[fni] != '\0')
 	{
-		_fneputschar(fnstr[i]);
-		i++;
+		_fneputschar(fnstr[fni]);
+		fni++;
 	}
 }
 
 /**
- * _fneputschar - writes the character c to stderr
- * @c: The character to print
+ * _fneputschar - writes the character fnc to stderr
+ * @fnc: The character to print
  *
  * Return: On success 1.
  * On error, -1 is returned, and errno is set appropriately.
  */
-int _fneputschar(char c)
+int _fneputschar(char fnc)
 {
-	static int i;
-	static char buf[W_BUFFER_SIZE];
+	static int fni;
+	static char fnbuf[W_BUFFER_SIZE];
 
-	if (c == BUFFER_FLUSH || i >= W_BUFFER_SIZE)
+	if (fnc == BUFFER_FLUSH || fni >= W_BUFFER_SIZE)
 	{
-		write(2, buf, i);
-		i = 0;
+		write(2, fnbuf, fni);
+		fni = 0;
 	}
-	if (c != BUFFER_FLUSH)
-		buf[i++] = c;
+	if (fnc != BUFFER_FLUSH)
+		fnbuf[fni++] = fnc;
 	return (1);
 }
 
 /**
- * _fneputsfd - writes the character c to given fd
- * @c: The character to print
- * @fd: The filedescriptor to write to
+ * _fneputsfd - writes the character fnc to given fnfd
+ * @fnc: The character to print
+ * @fnfd: The filedescriptor to write to
  *
  * Return: On success 1.
  * On error, -1 is returned, and errno is set appropriately.
  */
-int _fneputsfd(char c, int fd)
+int _fneputsfd(char fnc, int fnfd)
 {
-	static int i;
-	static char buf[W_BUFFER_SIZE];
+	static int fni;
+	static char fnbuf[W_BUFFER_SIZE];
 
-	if (c == BUFFER_FLUSH || i >= W_BUFFER_SIZE)
+	if (fnc == BUFFER_FLUSH || fni >= W_BUFFER_SIZE)
 	{
-		write(fd, buf, i);
-		i = 0;
+		write(fnfd, fnbuf, fni);
+		fni = 0;
 	}
-	if (c != BUFFER_FLUSH)
-		buf[i++] = c;
+	if (fnc != BUFFER_FLUSH)
+		fnbuf[fni++] = fnc;
 	return (1);
 }
 
 /**
  *_fn_putsfd - prints an input string
  * @fnstr: the string to be printed
- * @fd: the filedescriptor to write to
+ * @fnfd: the filedescriptor to write to
  *
  * Return: the number of chars put
  */
-int _fn_putsfd(char *fnstr, int fd)
+int _fn_putsfd(char *fnstr, int fnfd)
 {
-	int i = 0;
+	int fni = 0;
 
 	if (!fnstr)
 		return (0);
 	while (*fnstr)
 	{
-		i += _fneputsfd(*fnstr++, fd);
+		fni += _fneputsfd(*fnstr++, fnfd);
 	}
-	return (i);
+	return (fni);
 }
