@@ -45,7 +45,8 @@ int fnIsChain(fninfopass_t *info, char *buf, size_t *p)
  *
  * Return: Void
  */
-void fnCheckChain(fninfopass_t *info, char *buf, size_t *p, size_t i, size_t len)
+void fnCheckChain(fninfopass_t *info, char *buf,
+size_t *p, size_t i, size_t len)
 {
 	size_t j = *p;
 
