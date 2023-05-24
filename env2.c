@@ -1,20 +1,20 @@
 #include "shell.h"
 
 /**
- * fnget_environ - returns the string array copy of our fnenviron
+ * fnget_environ - returns the string array copy of our environ
  * @info: Structure containing potential arguments. Used to maintain
  *          constant function prototype.
  * Return: Always 0
  */
 char **fnget_environ(fninfopass_t *info)
 {
-	if (!info->fnenviron || info->fnenv_changed)
+	if (!info->environ || info->fnenv_changed)
 	{
-		info->fnenviron = fnListToStrgs(info->fnenv);
+		info->environ = fnListToStrgs(info->fnenv);
 		info->fnenv_changed = 0;
 	}
 
-	return (info->fnenviron);
+	return (info->environ);
 }
 
 /**

@@ -13,7 +13,7 @@ int _fnenv(fninfopass_t *info)
 }
 
 /**
- * _fngetenv - gets the value of an fnenviron variable
+ * _fngetenv - gets the value of an environ variable
  * @info: Structure containing potential arguments. Used to maintain
  * @name: fnenv var name
  *
@@ -85,8 +85,8 @@ int fnpopulateEnvList(fninfopass_t *info)
 	lst_t *node = NULL;
 	size_t i;
 
-	for (i = 0; fnenviron[i]; i++)
-		fnAddNodeEnd(&node, fnenviron[i], 0);
+	for (i = 0; environ[i]; i++)
+		fnAddNodeEnd(&node, environ[i], 0);
 	info->fnenv = node;
 	return (0);
 }

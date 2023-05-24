@@ -34,7 +34,7 @@
 #define BCKPFILE	".simple_shell_history"
 #define HISTMAX	4096
 
-extern char **fnenviron;
+extern char **environ;
 
 
 /**
@@ -61,11 +61,11 @@ typedef struct liststring
  *@fnerr_num: the error code for exit()s
  *@fnlinecount_flag: if on count this line of input
  *@fnfname: the program filename
- *@fnenv: linked list local copy of fnenviron
- *@fnenviron: custom modified copy of fnenviron from LL fnenv
+ *@fnenv: linked list local copy of environ
+ *@environ: custom modified copy of environ from LL fnenv
  *@fnhistory: the fnhistory node
  *@fnalias: the fnalias node
- *@fnenv_changed: on if fnenviron was changed
+ *@fnenv_changed: on if environ was changed
  *@fnstatus: the return fnstatus of the last exec'd command
  *@fncmd_buf: address of pointer to fncmd_buf, on if chaining
  *@fncmd_buf_type: CMD_type ||, &&, ;
@@ -85,7 +85,7 @@ typedef struct fnpassinfo
 	lst_t *fnenv;
 	lst_t *fnhistory;
 	lst_t *fnalias;
-	char **fnenviron;
+	char **environ;
 	int fnenv_changed;
 	int fnstatus;
 

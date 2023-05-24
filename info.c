@@ -64,8 +64,8 @@ void fnfree_info(fninfopass_t *info, int all)
 			fnFreeList(&(info->fnhistory));
 		if (info->fnalias)
 			fnFreeList(&(info->fnalias));
-		fnffree(info->fnenviron);
-			info->fnenviron = NULL;
+		fnffree(info->environ);
+			info->environ = NULL;
 		fnbfree((void **)info->fncmd_buf);
 		if (info->fnreadfd > 2)
 			close(info->fnreadfd);
