@@ -2,23 +2,23 @@
 
 /**
  * _fnerratoi - converts a string to an integer
- * @s: the string to be converted
+ * @fns: the string to be converted
  * Return: 0 if no numbers in string, converted number otherwise
  *       -1 on error
  */
-int _fnerratoi(char *s)
+int _fnerratoi(char *fns)
 {
-	int i = 0;
+	int fni = 0;
 	unsigned long int result = 0;
 
-	if (*s == '+')
-		s++;  /* TODO: why does this make main return 255? */
-	for (i = 0;  s[i] != '\0'; i++)
+	if (*fns == '+')
+		fns++;  /* TODO: why does this make main return 255? */
+	for (fni = 0;  fns[fni] != '\0'; fni++)
 	{
-		if (s[i] >= '0' && s[i] <= '9')
+		if (fns[fni] >= '0' && fns[fni] <= '9')
 		{
 			result *= 10;
-			result += (s[i] - '0');
+			result += (fns[fni] - '0');
 			if (result > INT_MAX)
 				return (-1);
 		}
@@ -31,11 +31,11 @@ int _fnerratoi(char *s)
 /**
  * fnprnterr - prints an error message
  * @info: the parameter & return info struct
- * @estr: string containing specified error type
+ * @fnestr: string containing specified error type
  * Return: 0 if no numbers in string, converted number otherwise
  *        -1 on error
  */
-void fnprnterr(fninfopass_t *info, char *estr)
+void fnprnterr(fninfopass_t *info, char *fnestr)
 {
 	_fneputs(info->fnfname);
 	_fneputs(": ");
@@ -43,41 +43,41 @@ void fnprnterr(fninfopass_t *info, char *estr)
 	_fneputs(": ");
 	_fneputs(info->fnargv[0]);
 	_fneputs(": ");
-	_fneputs(estr);
+	_fneputs(fnestr);
 }
 
 /**
  * fnprntd - function prints a decimal (integer) number (base 10)
- * @input: the input
- * @fd: the filedescriptor to write to
+ * @fninput: the fninput
+ * @fnfd: the filedescriptor to write to
  *
  * Return: number of characters printed
  */
-int fnprntd(int input, int fd)
+int fnprntd(int fninput, int fnfd)
 {
 	int (*__putchar)(char) = _fn_putchar;
-	int i, count = 0;
+	int fni, count = 0;
 	unsigned int _abs_, current;
 
-	if (fd == STDERR_FILENO)
+	if (fnfd == STDERR_FILENO)
 		__putchar = _fneputschar;
-	if (input < 0)
+	if (fninput < 0)
 	{
-		_abs_ = -input;
+		_abs_ = -fninput;
 		__putchar('-');
 		count++;
 	}
 	else
-		_abs_ = input;
+		_abs_ = fninput;
 	current = _abs_;
-	for (i = 1000000000; i > 1; i /= 10)
+	for (fni = 1000000000; fni > 1; fni /= 10)
 	{
-		if (_abs_ / i)
+		if (_abs_ / fni)
 		{
-			__putchar('0' + current / i);
+			__putchar('0' + current / fni);
 			count++;
 		}
-		current %= i;
+		current %= fni;
 	}
 	__putchar('0' + current);
 	count++;
@@ -88,53 +88,53 @@ int fnprntd(int input, int fd)
 /**
  * fncnvrtnumber - converter function, a clone of itoa
  * @fnnum: number
- * @base: base
- * @flags: argument flags
+ * @fnbase: fnbase
+ * @fnflags: argument fnflags
  *
  * Return: string
  */
-char *fncnvrtnumber(long int fnnum, int base, int flags)
+char *fncnvrtnumber(long int fnnum, int fnbase, int fnflags)
 {
-	static char *array;
-	static char buffer[50];
-	char sign = 0;
-	char *ptr;
-	unsigned long n = fnnum;
+	static char *fnarray;
+	static char fnbuffer[50];
+	char fnsign = 0;
+	char *fnnptr;
+	unsigned long fnn = fnnum;
 
-	if (!(flags & CVNT_UNSD) && fnnum < 0)
+	if (!(fnflags & CVNT_UNSD) && fnnum < 0)
 	{
-		n = -fnnum;
-		sign = '-';
+		fnn = -fnnum;
+		fnsign = '-';
 
 	}
-	array = flags & CVNT_LWCASE ? "0123456789abcdef" : "0123456789ABCDEF";
-	ptr = &buffer[49];
-	*ptr = '\0';
+	fnarray = fnflags & CVNT_LWCASE ? "0123456789abcdef" : "0123456789ABCDEF";
+	fnnptr = &fnbuffer[49];
+	*fnnptr = '\0';
 
 	do	{
-		*--ptr = array[n % base];
-		n /= base;
-	} while (n != 0);
+		*--fnnptr = fnarray[fnn % fnbase];
+		fnn /= fnbase;
+	} while (fnn != 0);
 
-	if (sign)
-		*--ptr = sign;
-	return (ptr);
+	if (fnsign)
+		*--fnnptr = fnsign;
+	return (fnnptr);
 }
 
 /**
  * fndelcomments - function replaces first instance of '#' with '\0'
- * @buf: address of the string to modify
+ * @fnbuf: address of the string to modify
  *
  * Return: Always 0;
  */
-void fndelcomments(char *buf)
+void fndelcomments(char *fnbuf)
 {
-	int i;
+	int fni;
 
-	for (i = 0; buf[i] != '\0'; i++)
-		if (buf[i] == '#' && (!i || buf[i - 1] == ' '))
+	for (fni = 0; fnbuf[fni] != '\0'; fni++)
+		if (fnbuf[fni] == '#' && (!fni || fnbuf[fni - 1] == ' '))
 		{
-			buf[i] = '\0';
+			fnbuf[fni] = '\0';
 			break;
 		}
 }

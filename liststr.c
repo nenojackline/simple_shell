@@ -76,22 +76,22 @@ lst_t *fnAddNodeEnd(lst_t **head, const char *fnstr, int fnnum)
 
 /**
  * fnPrintListStr - prints only the fnstr element of a lst_t linked list
- * @h: pointer to first node
+ * @fnh: pointer to first node
  *
  * Return: size of list
  */
-size_t fnPrintListStr(const lst_t *h)
+size_t fnPrintListStr(const lst_t *fnh)
 {
-	size_t i = 0;
+	size_t fni = 0;
 
-	while (h)
+	while (fnh)
 	{
-		_fn_puts(h->fnstr ? h->fnstr : "(nil)");
+		_fn_puts(fnh->fnstr ? fnh->fnstr : "(nil)");
 		_fn_puts("\n");
-		h = h->fnnext;
-		i++;
+		fnh = fnh->fnnext;
+		fni++;
 	}
-	return (i);
+	return (fni);
 }
 
 /**
@@ -104,7 +104,7 @@ size_t fnPrintListStr(const lst_t *h)
 int fnDeleteNodeAtIndex(lst_t **head, unsigned int index)
 {
 	lst_t *node, *prev_node;
-	unsigned int i = 0;
+	unsigned int fni = 0;
 
 	if (!head || !*head)
 		return (0);
@@ -120,14 +120,14 @@ int fnDeleteNodeAtIndex(lst_t **head, unsigned int index)
 	node = *head;
 	while (node)
 	{
-		if (i == index)
+		if (fni == index)
 		{
 			prev_node->fnnext = node->fnnext;
 			free(node->fnstr);
 			free(node);
 			return (1);
 		}
-		i++;
+		fni++;
 		prev_node = node;
 		node = node->fnnext;
 	}

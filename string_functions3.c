@@ -2,73 +2,73 @@
 
 /**
  **_fn_strngcpy - copies a string
- *@dest: the destination string to be copied to
- *@src: the source string
- *@n: the amount of characters to be copied
+ *@fndestination: the destination string to be copied to
+ *@fnsource: the source string
+ *@fnn: the amount of characters to be copied
  *Return: the concatenated string
  */
-char *_fn_strngcpy(char *dest, char *src, int n)
+char *_fn_strngcpy(char *fndestination, char *fnsource, int fnn)
 {
-	int i, j;
-	char *s = dest;
+	int fni, j;
+	char *fns = fndestination;
 
-	i = 0;
-	while (src[i] != '\0' && i < n - 1)
+	fni = 0;
+	while (fnsource[fni] != '\0' && fni < fnn - 1)
 	{
-		dest[i] = src[i];
-		i++;
+		fndestination[fni] = fnsource[fni];
+		fni++;
 	}
-	if (i < n)
+	if (fni < fnn)
 	{
-		j = i;
-		while (j < n)
+		j = fni;
+		while (j < fnn)
 		{
-			dest[j] = '\0';
+			fndestination[j] = '\0';
 			j++;
 		}
 	}
-	return (s);
+	return (fns);
 }
 
 /**
  **_fn_strngcat - concatenates two strings
- *@dest: the first string
- *@src: the second string
- *@n: the amount of bytes to be maximally used
+ *@fndestination: the first string
+ *@fnsource: the second string
+ *@fnn: the amount of bytes to be maximally used
  *Return: the concatenated string
  */
-char *_fn_strngcat(char *dest, char *src, int n)
+char *_fn_strngcat(char *fndestination, char *fnsource, int fnn)
 {
-	int i, j;
-	char *s = dest;
+	int fni, j;
+	char *fns = fndestination;
 
-	i = 0;
+	fni = 0;
 	j = 0;
-	while (dest[i] != '\0')
-		i++;
-	while (src[j] != '\0' && j < n)
+	while (fndestination[fni] != '\0')
+		fni++;
+	while (fnsource[j] != '\0' && j < fnn)
 	{
-		dest[i] = src[j];
-		i++;
+		fndestination[fni] = fnsource[j];
+		fni++;
 		j++;
 	}
-	if (j < n)
-		dest[i] = '\0';
-	return (s);
+	if (j < fnn)
+		fndestination[fni] = '\0';
+	return (fns);
 }
 
 /**
  **_fn_strngchr - locates a character in a string
- *@s: the string to be parsed
- *@c: the character to look for
- *Return: (s) a pointer to the memory area s
+ *@fns: the string to be parsed
+ *@fnc: the character to look for
+ *Return: (fns) a pointer to the memory area fns
  */
-char *_fn_strngchr(char *s, char c)
+char *_fn_strngchr(char *fns, char fnc)
 {
 	do {
-		if (*s == c)
-			return (s);
-	} while (*s++ != '\0');
+		if (*fns == fnc)
+			return (fns);
+	} while (*fns++ != '\0');
 
 	return (NULL);
 }

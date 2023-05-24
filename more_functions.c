@@ -13,27 +13,27 @@ int fninteractive(fninfopass_t *info)
 
 /**
  * fnisdelim - checks if character is a delimeter
- * @c: the char to check
- * @delim: the delimeter string
+ * @fnc: the char to check
+ * @fndelim: the delimeter string
  * Return: 1 if true, 0 if false
  */
-int fnisdelim(char c, char *delim)
+int fnisdelim(char fnc, char *fndelim)
 {
-	while (*delim)
-		if (*delim++ == c)
+	while (*fndelim)
+		if (*fndelim++ == fnc)
 			return (1);
 	return (0);
 }
 
 /**
  *_fnis_alpha - checks for alphabetic character
- *@c: The character to input
- *Return: 1 if c is alphabetic, 0 otherwise
+ *@fnc: The character to input
+ *Return: 1 if fnc is alphabetic, 0 otherwise
  */
 
-int _fnis_alpha(int c)
+int _fnis_alpha(int fnc)
 {
-	if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'))
+	if ((fnc >= 'a' && fnc <= 'z') || (fnc >= 'A' && fnc <= 'Z'))
 		return (1);
 	else
 		return (0);
@@ -41,34 +41,34 @@ int _fnis_alpha(int c)
 
 /**
  *_fnatoi - converts a string to an integer
- *@s: the string to be converted
+ *@fns: the string to be converted
  *Return: 0 if no numbers in string, converted number otherwise
  */
 
-int _fnatoi(char *s)
+int _fnatoi(char *fns)
 {
-	int i, sign = 1, flag = 0, output;
+	int fni, fnsign = 1, fnflag = 0, fnouput;
 	unsigned int result = 0;
 
-	for (i = 0;  s[i] != '\0' && flag != 2; i++)
+	for (fni = 0;  fns[fni] != '\0' && fnflag != 2; fni++)
 	{
-		if (s[i] == '-')
-			sign *= -1;
+		if (fns[fni] == '-')
+			fnsign *= -1;
 
-		if (s[i] >= '0' && s[i] <= '9')
+		if (fns[fni] >= '0' && fns[fni] <= '9')
 		{
-			flag = 1;
+			fnflag = 1;
 			result *= 10;
-			result += (s[i] - '0');
+			result += (fns[fni] - '0');
 		}
-		else if (flag == 1)
-			flag = 2;
+		else if (fnflag == 1)
+			fnflag = 2;
 	}
 
-	if (sign == -1)
-		output = -result;
+	if (fnsign == -1)
+		fnouput = -result;
 	else
-		output = result;
+		fnouput = result;
 
-	return (output);
+	return (fnouput);
 }

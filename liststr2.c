@@ -2,20 +2,20 @@
 
 /**
  * fnListLen - determines length of linked list
- * @h: pointer to first node
+ * @fnh: pointer to first node
  *
  * Return: size of list
  */
-size_t fnListLen(const lst_t *h)
+size_t fnListLen(const lst_t *fnh)
 {
-	size_t i = 0;
+	size_t fni = 0;
 
-	while (h)
+	while (fnh)
 	{
-		h = h->fnnext;
-		i++;
+		fnh = fnh->fnnext;
+		fni++;
 	}
-	return (i);
+	return (fni);
 }
 
 /**
@@ -27,55 +27,55 @@ size_t fnListLen(const lst_t *h)
 char **fnListToStrgs(lst_t *head)
 {
 	lst_t *node = head;
-	size_t i = fnListLen(head), j;
+	size_t fni = fnListLen(head), fnj;
 	char **strs;
 	char *fnstr;
 
-	if (!head || !i)
+	if (!head || !fni)
 		return (NULL);
-	strs = malloc(sizeof(char *) * (i + 1));
+	strs = malloc(sizeof(char *) * (fni + 1));
 	if (!strs)
 		return (NULL);
-	for (i = 0; node; node = node->fnnext, i++)
+	for (fni = 0; node; node = node->fnnext, fni++)
 	{
 		fnstr = malloc(_fn_strnlen(node->fnstr) + 1);
 		if (!fnstr)
 		{
-			for (j = 0; j < i; j++)
-				free(strs[j]);
+			for (fnj = 0; fnj < fni; fnj++)
+				free(strs[fnj]);
 			free(strs);
 			return (NULL);
 		}
 
 		fnstr = _fn_strncopy(fnstr, node->fnstr);
-		strs[i] = fnstr;
+		strs[fni] = fnstr;
 	}
-	strs[i] = NULL;
+	strs[fni] = NULL;
 	return (strs);
 }
 
 
 /**
  * fnPrintLists - prints all elements of a lst_t linked list
- * @h: pointer to first node
+ * @fnh: pointer to first node
  *
  * Return: size of list
  */
-size_t fnPrintLists(const lst_t *h)
+size_t fnPrintLists(const lst_t *fnh)
 {
-	size_t i = 0;
+	size_t fni = 0;
 
-	while (h)
+	while (fnh)
 	{
-		_fn_puts(fncnvrtnumber(h->fnnum, 10, 0));
+		_fn_puts(fncnvrtnumber(fnh->fnnum, 10, 0));
 		_fn_putchar(':');
 		_fn_putchar(' ');
-		_fn_puts(h->fnstr ? h->fnstr : "(nil)");
+		_fn_puts(fnh->fnstr ? fnh->fnstr : "(nil)");
 		_fn_puts("\n");
-		h = h->fnnext;
-		i++;
+		fnh = fnh->fnnext;
+		fni++;
 	}
-	return (i);
+	return (fni);
 }
 
 /**
@@ -109,14 +109,14 @@ lst_t *fnNodeStartsWith(lst_t *node, char *prefix, char c)
  */
 ssize_t fnGetNodeIndex(lst_t *head, lst_t *node)
 {
-	size_t i = 0;
+	size_t fni = 0;
 
 	while (head)
 	{
 		if (head == node)
-			return (i);
+			return (fni);
 		head = head->fnnext;
-		i++;
+		fni++;
 	}
 	return (-1);
 }

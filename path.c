@@ -24,63 +24,63 @@ int fn_is_command(fninfopass_t *info, char *fnpath)
 
 /**
  * fn_duplicate_chars - duplicates characters
- * @pathstr: the PATH string
- * @start: starting index
- * @stop: stopping index
+ * @fnpathstr: the PATH string
+ * @fnstart: starting index
+ * @fnstop: stopping index
  *
  * Return: pointer to new buffer
  */
-char *fn_duplicate_chars(char *pathstr, int start, int stop)
+char *fn_duplicate_chars(char *fnpathstr, int fnstart, int fnstop)
 {
-	static char buf[1024];
-	int i = 0, k = 0;
+	static char fnbuf[1024];
+	int fni = 0, fnk = 0;
 
-	for (k = 0, i = start; i < stop; i++)
-		if (pathstr[i] != ':')
-			buf[k++] = pathstr[i];
-	buf[k] = 0;
-	return (buf);
+	for (fnk = 0, fni = fnstart; fni < fnstop; fni++)
+		if (fnpathstr[fni] != ':')
+			fnbuf[fnk++] = fnpathstr[fni];
+	fnbuf[fnk] = 0;
+	return (fnbuf);
 }
 
 /**
- * fn_fnd_path - finds this cmd in the PATH string
+ * fn_fnd_path - finds this fncmd in the PATH string
  * @info: the info struct
- * @pathstr: the PATH string
- * @cmd: the cmd to find
+ * @fnpathstr: the PATH string
+ * @fncmd: the fncmd to find
  *
- * Return: full fnpath of cmd if found or NULL
+ * Return: full fnpath of fncmd if found or NULL
  */
-char *fn_fnd_path(fninfopass_t *info, char *pathstr, char *cmd)
+char *fn_fnd_path(fninfopass_t *info, char *fnpathstr, char *fncmd)
 {
-	int i = 0, curr_pos = 0;
+	int fni = 0, curr_pos = 0;
 	char *fnpath;
 
-	if (!pathstr)
+	if (!fnpathstr)
 		return (NULL);
-	if ((_fn_strnlen(cmd) > 2) && fn_degin_with(cmd, "./"))
+	if ((_fn_strnlen(fncmd) > 2) && fn_degin_with(fncmd, "./"))
 	{
-		if (fn_is_command(info, cmd))
-			return (cmd);
+		if (fn_is_command(info, fncmd))
+			return (fncmd);
 	}
 	while (1)
 	{
-		if (!pathstr[i] || pathstr[i] == ':')
+		if (!fnpathstr[fni] || fnpathstr[fni] == ':')
 		{
-			fnpath = fn_duplicate_chars(pathstr, curr_pos, i);
+			fnpath = fn_duplicate_chars(fnpathstr, curr_pos, fni);
 			if (!*fnpath)
-				_fn_strncat(fnpath, cmd);
+				_fn_strncat(fnpath, fncmd);
 			else
 			{
 				_fn_strncat(fnpath, "/");
-				_fn_strncat(fnpath, cmd);
+				_fn_strncat(fnpath, fncmd);
 			}
 			if (fn_is_command(info, fnpath))
 				return (fnpath);
-			if (!pathstr[i])
+			if (!fnpathstr[fni])
 				break;
-			curr_pos = i;
+			curr_pos = fni;
 		}
-		i++;
+		fni++;
 	}
 	return (NULL);
 }

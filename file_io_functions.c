@@ -9,19 +9,19 @@
 
 char *fnget_history_file(fninfopass_t *info)
 {
-	char *buf, *dir;
+	char *fnbuf, *fndir;
 
-	dir = _fngetenv(info, "HOME=");
-	if (!dir)
+	fndir = _fngetenv(info, "HOME=");
+	if (!fndir)
 		return (NULL);
-	buf = malloc(sizeof(char) * (_fn_strnlen(dir) + _fn_strnlen(BCKPFILE) + 2));
-	if (!buf)
+	fnbuf = malloc(sizeof(char) * (_fn_strnlen(fndir) + _fn_strnlen(BCKPFILE) + 2));
+	if (!fnbuf)
 		return (NULL);
-	buf[0] = 0;
-	_fn_strncopy(buf, dir);
-	_fn_strncat(buf, "/");
-	_fn_strncat(buf, BCKPFILE);
-	return (buf);
+	fnbuf[0] = 0;
+	_fn_strncopy(fnbuf, fndir);
+	_fn_strncat(fnbuf, "/");
+	_fn_strncat(fnbuf, BCKPFILE);
+	return (fnbuf);
 }
 
 /**
@@ -32,24 +32,24 @@ char *fnget_history_file(fninfopass_t *info)
  */
 int fnwrite_history(fninfopass_t *info)
 {
-	ssize_t fd;
+	ssize_t fnfd;
 	char *filename = fnget_history_file(info);
 	lst_t *node = NULL;
 
 	if (!filename)
 		return (-1);
 
-	fd = open(filename, O_CREAT | O_TRUNC | O_RDWR, 0644);
+	fnfd = open(filename, O_CREAT | O_TRUNC | O_RDWR, 0644);
 	free(filename);
-	if (fd == -1)
+	if (fnfd == -1)
 		return (-1);
 	for (node = info->fnhistory; node; node = node->fnnext)
 	{
-		_fn_putsfd(node->fnstr, fd);
-		_fneputsfd('\n', fd);
+		_fn_putsfd(node->fnstr, fnfd);
+		_fneputsfd('\n', fnfd);
 	}
-	_fneputsfd(BUFFER_FLUSH, fd);
-	close(fd);
+	_fneputsfd(BUFFER_FLUSH, fnfd);
+	close(fnfd);
 	return (1);
 }
 
@@ -61,41 +61,41 @@ int fnwrite_history(fninfopass_t *info)
  */
 int fnread_history(fninfopass_t *info)
 {
-	int i, last = 0, linecount = 0;
-	ssize_t fd, rdlen, fsize = 0;
+	int fni, fnlast = 0, fnlinecount = 0;
+	ssize_t fnfd, fnrdlen, fnfsize = 0;
 	struct stat st;
-	char *buf = NULL, *filename = fnget_history_file(info);
+	char *fnbuf = NULL, *filename = fnget_history_file(info);
 
 	if (!filename)
 		return (0);
 
-	fd = open(filename, O_RDONLY);
+	fnfd = open(filename, O_RDONLY);
 	free(filename);
-	if (fd == -1)
+	if (fnfd == -1)
 		return (0);
-	if (!fstat(fd, &st))
-		fsize = st.st_size;
-	if (fsize < 2)
+	if (!fstat(fnfd, &st))
+		fnfsize = st.st_size;
+	if (fnfsize < 2)
 		return (0);
-	buf = malloc(sizeof(char) * (fsize + 1));
-	if (!buf)
+	fnbuf = malloc(sizeof(char) * (fnfsize + 1));
+	if (!fnbuf)
 		return (0);
-	rdlen = read(fd, buf, fsize);
-	buf[fsize] = 0;
-	if (rdlen <= 0)
-		return (free(buf), 0);
-	close(fd);
-	for (i = 0; i < fsize; i++)
-		if (buf[i] == '\n')
+	fnrdlen = read(fnfd, fnbuf, fnfsize);
+	fnbuf[fnfsize] = 0;
+	if (fnrdlen <= 0)
+		return (free(fnbuf), 0);
+	close(fnfd);
+	for (fni = 0; fni < fnfsize; fni++)
+		if (fnbuf[fni] == '\n')
 		{
-			buf[i] = 0;
-			fnbuildHistoryList(info, buf + last, linecount++);
-			last = i + 1;
+			fnbuf[fni] = 0;
+			fnbuildHistoryList(info, fnbuf + fnlast, fnlinecount++);
+			fnlast = fni + 1;
 		}
-	if (last != i)
-		fnbuildHistoryList(info, buf + last, linecount++);
-	free(buf);
-	info->fnhistcount = linecount;
+	if (fnlast != fni)
+		fnbuildHistoryList(info, fnbuf + fnlast, fnlinecount++);
+	free(fnbuf);
+	info->fnhistcount = fnlinecount;
 	while (info->fnhistcount-- >= HISTMAX)
 		fnDeleteNodeAtIndex(&(info->fnhistory), 0);
 	fnRenumberHistory(info);
@@ -105,18 +105,18 @@ int fnread_history(fninfopass_t *info)
 /**
  * fnbuildHistoryList - adds entry to a fnhistory linked list
  * @info: Structure containing potential arguments. Used to maintain
- * @buf: buffer
- * @linecount: the fnhistory linecount, fnhistcount
+ * @fnbuf: buffer
+ * @fnlinecount: the fnhistory fnlinecount, fnhistcount
  *
  * Return: Always 0
  */
-int fnbuildHistoryList(fninfopass_t *info, char *buf, int linecount)
+int fnbuildHistoryList(fninfopass_t *info, char *fnbuf, int fnlinecount)
 {
 	lst_t *node = NULL;
 
 	if (info->fnhistory)
 		node = info->fnhistory;
-	fnAddNodeEnd(&node, buf, linecount);
+	fnAddNodeEnd(&node, fnbuf, fnlinecount);
 
 	if (!info->fnhistory)
 		info->fnhistory = node;
@@ -132,12 +132,12 @@ int fnbuildHistoryList(fninfopass_t *info, char *buf, int linecount)
 int fnRenumberHistory(fninfopass_t *info)
 {
 	lst_t *node = info->fnhistory;
-	int i = 0;
+	int fni = 0;
 
 	while (node)
 	{
-		node->fnnum = i++;
+		node->fnnum = fni++;
 		node = node->fnnext;
 	}
-	return (info->fnhistcount = i);
+	return (info->fnhistcount = fni);
 }

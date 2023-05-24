@@ -2,61 +2,61 @@
 
 /**
  **_fn_memryset - fills memory with a constant byte
- *@s: the pointer to the memory area
- *@b: the byte to fill *s with
- *@n: the amount of bytes to be filled
- *Return: (s) a pointer to the memory area s
+ *@fns: the pointer to the memory area
+ *@fnb: the byte to fill *fns with
+ *@fnn: the amount of bytes to be filled
+ *Return: (fns) a pointer to the memory area fns
  */
-char *_fn_memryset(char *s, char b, unsigned int n)
+char *_fn_memryset(char *fns, char fnb, unsigned int fnn)
 {
 	unsigned int i;
 
-	for (i = 0; i < n; i++)
-		s[i] = b;
-	return (s);
+	for (i = 0; i < fnn; i++)
+		fns[i] = fnb;
+	return (fns);
 }
 
 /**
  * fnffree - frees a string of strings
- * @pp: string of strings
+ * @fnpp: string of strings
  */
-void fnffree(char **pp)
+void fnffree(char **fnpp)
 {
-	char **a = pp;
+	char **a = fnpp;
 
-	if (!pp)
+	if (!fnpp)
 		return;
-	while (*pp)
-		free(*pp++);
+	while (*fnpp)
+		free(*fnpp++);
 	free(a);
 }
 
 /**
  * _fnrealloc - reallocates a block of memory
  * @ptr: pointer to previous malloc'ated block
- * @old_size: byte size of previous block
- * @new_size: byte size of new block
+ * @fnold_sz: byte size of previous block
+ * @fnnew_sz: byte size of new block
  *
  * Return: pointer to da ol'block nameen.
  */
-void *_fnrealloc(void *ptr, unsigned int old_size, unsigned int new_size)
+void *_fnrealloc(void *ptr, unsigned int fnold_sz, unsigned int fnnew_sz)
 {
-	char *p;
+	char *fnp;
 
 	if (!ptr)
-		return (malloc(new_size));
-	if (!new_size)
+		return (malloc(fnnew_sz));
+	if (!fnnew_sz)
 		return (free(ptr), NULL);
-	if (new_size == old_size)
+	if (fnnew_sz == fnold_sz)
 		return (ptr);
 
-	p = malloc(new_size);
-	if (!p)
+	fnp = malloc(fnnew_sz);
+	if (!fnp)
 		return (NULL);
 
-	old_size = old_size < new_size ? old_size : new_size;
-	while (old_size--)
-		p[old_size] = ((char *)ptr)[old_size];
+	fnold_sz = fnold_sz < fnnew_sz ? fnold_sz : fnnew_sz;
+	while (fnold_sz--)
+		fnp[fnold_sz] = ((char *)ptr)[fnold_sz];
 	free(ptr);
-	return (p);
+	return (fnp);
 }

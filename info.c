@@ -15,13 +15,13 @@ void fnclr_info(fninfopass_t *info)
 /**
  * fnset_info - initializes fninfopass_t struct
  * @info: struct address
- * @av: argument vector
+ * @fnav: argument vector
  */
-void fnset_info(fninfopass_t *info, char **av)
+void fnset_info(fninfopass_t *info, char **fnav)
 {
-	int i = 0;
+	int fni = 0;
 
-	info->fnfname = av[0];
+	info->fnfname = fnav[0];
 	if (info->fnarg)
 	{
 		info->fnargv = fn_strntow(info->fnarg, " \t");
@@ -35,9 +35,9 @@ void fnset_info(fninfopass_t *info, char **av)
 				info->fnargv[1] = NULL;
 			}
 		}
-		for (i = 0; info->fnargv && info->fnargv[i]; i++)
+		for (fni = 0; info->fnargv && info->fnargv[fni]; fni++)
 			;
-		info->fnargc = i;
+		info->fnargc = fni;
 
 		fnReplaceAlias(info);
 		fnReplaceVars(info);
@@ -47,14 +47,14 @@ void fnset_info(fninfopass_t *info, char **av)
 /**
  * fnfree_info - frees fninfopass_t struct fields
  * @info: struct address
- * @all: true if freeing all fields
+ * @fnall: true if freeing fnall fields
  */
-void fnfree_info(fninfopass_t *info, int all)
+void fnfree_info(fninfopass_t *info, int fnall)
 {
 	fnffree(info->fnargv);
 	info->fnargv = NULL;
 	info->fnpath = NULL;
-	if (all)
+	if (fnall)
 	{
 		if (!info->fncmd_buf)
 			free(info->fnarg);

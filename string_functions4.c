@@ -3,21 +3,21 @@
 /**
  * **fn_strntow - splits a string into words. Repeat delimiters are ignored
  * @fnstr: the input string
- * @d: the delimeter string
+ * @fnd: the delimeter string
  * Return: a pointer to an array of strings, or NULL on failure
  */
 
-char **fn_strntow(char *fnstr, char *d)
+char **fn_strntow(char *fnstr, char *fnd)
 {
-	int i, j, k, m, numwords = 0;
+	int fni, fnj, fnk, fnm, numwords = 0;
 	char **s;
 
 	if (fnstr == NULL || fnstr[0] == 0)
 		return (NULL);
-	if (!d)
-		d = " ";
-	for (i = 0; fnstr[i] != '\0'; i++)
-		if (!fnisdelim(fnstr[i], d) && (fnisdelim(fnstr[i + 1], d) || !fnstr[i + 1]))
+	if (!fnd)
+		fnd = " ";
+	for (fni = 0; fnstr[fni] != '\0'; fni++)
+		if (!fnisdelim(fnstr[fni], fnd) && (fnisdelim(fnstr[fni + 1], fnd) || !fnstr[fni + 1]))
 			numwords++;
 
 	if (numwords == 0)
@@ -25,70 +25,70 @@ char **fn_strntow(char *fnstr, char *d)
 	s = malloc((1 + numwords) * sizeof(char *));
 	if (!s)
 		return (NULL);
-	for (i = 0, j = 0; j < numwords; j++)
+	for (fni = 0, fnj = 0; fnj < numwords; fnj++)
 	{
-		while (fnisdelim(fnstr[i], d))
-			i++;
-		k = 0;
-		while (!fnisdelim(fnstr[i + k], d) && fnstr[i + k])
-			k++;
-		s[j] = malloc((k + 1) * sizeof(char));
-		if (!s[j])
+		while (fnisdelim(fnstr[fni], fnd))
+			fni++;
+		fnk = 0;
+		while (!fnisdelim(fnstr[fni + fnk], fnd) && fnstr[fni + fnk])
+			fnk++;
+		s[fnj] = malloc((fnk + 1) * sizeof(char));
+		if (!s[fnj])
 		{
-			for (k = 0; k < j; k++)
-				free(s[k]);
+			for (fnk = 0; fnk < fnj; fnk++)
+				free(s[fnk]);
 			free(s);
 			return (NULL);
 		}
-		for (m = 0; m < k; m++)
-			s[j][m] = fnstr[i++];
-		s[j][m] = 0;
+		for (fnm = 0; fnm < fnk; fnm++)
+			s[fnj][fnm] = fnstr[fni++];
+		s[fnj][fnm] = 0;
 	}
-	s[j] = NULL;
+	s[fnj] = NULL;
 	return (s);
 }
 
 /**
  * **fn_strntow2 - splits a string into words
  * @fnstr: the input string
- * @d: the delimeter
+ * @fnd: the delimeter
  * Return: a pointer to an array of strings, or NULL on failure
  */
-char **fn_strntow2(char *fnstr, char d)
+char **fn_strntow2(char *fnstr, char fnd)
 {
-	int i, j, k, m, numwords = 0;
+	int fni, fnj, fnk, fnm, numwords = 0;
 	char **s;
 
 	if (fnstr == NULL || fnstr[0] == 0)
 		return (NULL);
-	for (i = 0; fnstr[i] != '\0'; i++)
-		if ((fnstr[i] != d && fnstr[i + 1] == d) ||
-		    (fnstr[i] != d && !fnstr[i + 1]) || fnstr[i + 1] == d)
+	for (fni = 0; fnstr[fni] != '\0'; fni++)
+		if ((fnstr[fni] != fnd && fnstr[fni + 1] == fnd) ||
+		    (fnstr[fni] != fnd && !fnstr[fni + 1]) || fnstr[fni + 1] == fnd)
 			numwords++;
 	if (numwords == 0)
 		return (NULL);
 	s = malloc((1 + numwords) * sizeof(char *));
 	if (!s)
 		return (NULL);
-	for (i = 0, j = 0; j < numwords; j++)
+	for (fni = 0, fnj = 0; fnj < numwords; fnj++)
 	{
-		while (fnstr[i] == d && fnstr[i] != d)
-			i++;
-		k = 0;
-		while (fnstr[i + k] != d && fnstr[i + k] && fnstr[i + k] != d)
-			k++;
-		s[j] = malloc((k + 1) * sizeof(char));
-		if (!s[j])
+		while (fnstr[fni] == fnd && fnstr[fni] != fnd)
+			fni++;
+		fnk = 0;
+		while (fnstr[fni + fnk] != fnd && fnstr[fni + fnk] && fnstr[fni + fnk] != fnd)
+			fnk++;
+		s[fnj] = malloc((fnk + 1) * sizeof(char));
+		if (!s[fnj])
 		{
-			for (k = 0; k < j; k++)
-				free(s[k]);
+			for (fnk = 0; fnk < fnj; fnk++)
+				free(s[fnk]);
 			free(s);
 			return (NULL);
 		}
-		for (m = 0; m < k; m++)
-			s[j][m] = fnstr[i++];
-		s[j][m] = 0;
+		for (fnm = 0; fnm < fnk; fnm++)
+			s[fnj][fnm] = fnstr[fni++];
+		s[fnj][fnm] = 0;
 	}
-	s[j] = NULL;
+	s[fnj] = NULL;
 	return (s);
 }

@@ -3,45 +3,45 @@
 /**
  * input_buf - buffers chained commands
  * @info: parameter struct
- * @buf: address of buffer
- * @len: address of len var
+ * @fnbuf: address of buffer
+ * @fnlen: address of fnlen var
  *
  * Return: bytes read
  */
-ssize_t input_buf(fninfopass_t *info, char **buf, size_t *len)
+ssize_t input_buf(fninfopass_t *info, char **fnbuf, size_t *fnlen)
 {
-	ssize_t r = 0;
-	size_t len_p = 0;
+	ssize_t fnm = 0;
+	size_t fnlen_p = 0;
 
-	if (!*len) /* if nothing left in the buffer, fill it */
+	if (!*fnlen) /* if nothing left in the buffer, fill it */
 	{
 		/*fnbfree((void **)info->fncmd_buf);*/
-		free(*buf);
-		*buf = NULL;
+		free(*fnbuf);
+		*fnbuf = NULL;
 		signal(SIGINT, fnsigintHandler);
 #if FNUSE_GETLN
-		r = getline(buf, &len_p, stdin);
+		fnm = getline(fnbuf, &fnlen_p, stdin);
 #else
-		r = _fngetline(info, buf, &len_p);
+		fnm = _fngetline(info, fnbuf, &fnlen_p);
 #endif
-		if (r > 0)
+		if (fnm > 0)
 		{
-			if ((*buf)[r - 1] == '\n')
+			if ((*fnbuf)[fnm - 1] == '\n')
 			{
-				(*buf)[r - 1] = '\0'; /* remove trailing newline */
-				r--;
+				(*fnbuf)[fnm - 1] = '\0'; /* remove trailing newline */
+				fnm--;
 			}
 			info->fnlinecount_flag = 1;
-			fndelcomments(*buf);
-			fnbuildHistoryList(info, *buf, info->fnhistcount++);
-			/* if (_fn_strngchr(*buf, ';')) is this a command chain? */
+			fndelcomments(*fnbuf);
+			fnbuildHistoryList(info, *fnbuf, info->fnhistcount++);
+			/* if (_fn_strngchr(*fnbuf, ';')) is this a command chain? */
 			{
-				*len = r;
-				info->fncmd_buf = buf;
+				*fnlen = fnm;
+				info->fncmd_buf = fnbuf;
 			}
 		}
 	}
-	return (r);
+	return (fnm);
 }
 
 /**
@@ -52,61 +52,61 @@ ssize_t input_buf(fninfopass_t *info, char **buf, size_t *len)
  */
 ssize_t fngetinput(fninfopass_t *info)
 {
-	static char *buf; /* the ';' command chain buffer */
-	static size_t i, j, len;
-	ssize_t r = 0;
-	char **buf_p = &(info->fnarg), *p;
+	static char *fnbuf; /* the ';' command chain buffer */
+	static size_t fni, fnj, fnlen;
+	ssize_t fnm = 0;
+	char **fnbuf_p = &(info->fnarg), *fnp;
 
 	_fn_putchar(BUFFER_FLUSH);
-	r = input_buf(info, &buf, &len);
-	if (r == -1) /* EOF */
+	fnm = input_buf(info, &fnbuf, &fnlen);
+	if (fnm == -1) /* EOF */
 		return (-1);
-	if (len)	/* we have commands left in the chain buffer */
+	if (fnlen)	/* we have commands left in the chain buffer */
 	{
-		j = i; /* init new iterator to current buf position */
-		p = buf + i; /* get pointer for return */
+		fnj = fni; /* init new iterator to current fnbuf position */
+		fnp = fnbuf + fni; /* get pointer for return */
 
-		fnCheckChain(info, buf, &j, i, len);
-		while (j < len) /* iterate to semicolon or end */
+		fnCheckChain(info, fnbuf, &fnj, fni, fnlen);
+		while (fnj < fnlen) /* iterate to semicolon or end */
 		{
-			if (fnIsChain(info, buf, &j))
+			if (fnIsChain(info, fnbuf, &fnj))
 				break;
-			j++;
+			fnj++;
 		}
 
-		i = j + 1; /* increment past nulled ';'' */
-		if (i >= len) /* reached end of buffer? */
+		fni = fnj + 1; /* increment past nulled ';'' */
+		if (fni >= fnlen) /* reached end of buffer? */
 		{
-			i = len = 0; /* reset position and length */
+			fni = fnlen = 0; /* reset position and length */
 			info->fncmd_buf_type = FN_COMD_NORM;
 		}
 
-		*buf_p = p; /* pass back pointer to current command position */
-		return (_fn_strnlen(p)); /* return length of current command */
+		*fnbuf_p = fnp; /* pass back pointer to current command position */
+		return (_fn_strnlen(fnp)); /* return length of current command */
 	}
 
-	*buf_p = buf; /* else not a chain, pass back buffer from _fngetline() */
-	return (r); /* return length of buffer from _fngetline() */
+	*fnbuf_p = fnbuf; /* else not a chain, pass back buffer from _fngetline() */
+	return (fnm); /* return length of buffer from _fngetline() */
 }
 
 /**
  * read_buf - reads a buffer
  * @info: parameter struct
- * @buf: buffer
- * @i: size
+ * @fnbuf: buffer
+ * @fni: size
  *
- * Return: r
+ * Return: fnm
  */
-ssize_t read_buf(fninfopass_t *info, char *buf, size_t *i)
+ssize_t read_buf(fninfopass_t *info, char *fnbuf, size_t *fni)
 {
-	ssize_t r = 0;
+	ssize_t fnm = 0;
 
-	if (*i)
+	if (*fni)
 		return (0);
-	r = read(info->fnreadfd, buf, R_BUFFER_SIZE);
-	if (r >= 0)
-		*i = r;
-	return (r);
+	fnm = read(info->fnreadfd, fnbuf, R_BUFFER_SIZE);
+	if (fnm >= 0)
+		*fni = fnm;
+	return (fnm);
 }
 
 /**
@@ -115,45 +115,45 @@ ssize_t read_buf(fninfopass_t *info, char *buf, size_t *i)
  * @ptr: address of pointer to buffer, preallocated or NULL
  * @length: size of preallocated ptr buffer if not NULL
  *
- * Return: s
+ * Return: fns
  */
 int _fngetline(fninfopass_t *info, char **ptr, size_t *length)
 {
-	static char buf[R_BUFFER_SIZE];
-	static size_t i, len;
-	size_t k;
-	ssize_t r = 0, s = 0;
-	char *p = NULL, *new_p = NULL, *c;
+	static char fnbuf[R_BUFFER_SIZE];
+	static size_t fni, fnlen;
+	size_t fnk;
+	ssize_t fnm = 0, fns = 0;
+	char *fnp = NULL, *fnnew_p = NULL, *fnc;
 
-	p = *ptr;
-	if (p && length)
-		s = *length;
-	if (i == len)
-		i = len = 0;
+	fnp = *ptr;
+	if (fnp && length)
+		fns = *length;
+	if (fni == fnlen)
+		fni = fnlen = 0;
 
-	r = read_buf(info, buf, &len);
-	if (r == -1 || (r == 0 && len == 0))
+	fnm = read_buf(info, fnbuf, &fnlen);
+	if (fnm == -1 || (fnm == 0 && fnlen == 0))
 		return (-1);
 
-	c = _fn_strngchr(buf + i, '\n');
-	k = c ? 1 + (unsigned int)(c - buf) : len;
-	new_p = _fnrealloc(p, s, s ? s + k : k + 1);
-	if (!new_p) /* MALLOC FAILURE! */
-		return (p ? free(p), -1 : -1);
+	fnc = _fn_strngchr(fnbuf + fni, '\n');
+	fnk = fnc ? 1 + (unsigned int)(fnc - fnbuf) : fnlen;
+	fnnew_p = _fnrealloc(fnp, fns, fns ? fns + fnk : fnk + 1);
+	if (!fnnew_p) /* MALLOC FAILURE! */
+		return (fnp ? free(fnp), -1 : -1);
 
-	if (s)
-		_fn_strngcat(new_p, buf + i, k - i);
+	if (fns)
+		_fn_strngcat(fnnew_p, fnbuf + fni, fnk - fni);
 	else
-		_fn_strngcpy(new_p, buf + i, k - i + 1);
+		_fn_strngcpy(fnnew_p, fnbuf + fni, fnk - fni + 1);
 
-	s += k - i;
-	i = k;
-	p = new_p;
+	fns += fnk - fni;
+	fni = fnk;
+	fnp = fnnew_p;
 
 	if (length)
-		*length = s;
-	*ptr = p;
-	return (s);
+		*length = fns;
+	*ptr = fnp;
+	return (fns);
 }
 
 /**

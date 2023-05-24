@@ -3,27 +3,27 @@
 /**
  * fnhsh - main shell loop
  * @info: the parameter & return info struct
- * @av: the argument vector from main()
+ * @fnav: the argument vector from main()
  *
  * Return: 0 on success, 1 on error, or error code
  */
-int fnhsh(fninfopass_t *info, char **av)
+int fnhsh(fninfopass_t *info, char **fnav)
 {
-	ssize_t r = 0;
-	int builtin_ret = 0;
+	ssize_t fnr = 0;
+	int fnbuiltin_ret = 0;
 
-	while (r != -1 && builtin_ret != -2)
+	while (fnr != -1 && fnbuiltin_ret != -2)
 	{
 		fnclr_info(info);
 		if (fninteractive(info))
 			_fn_puts("$ ");
 		_fneputschar(BUFFER_FLUSH);
-		r = fngetinput(info);
-		if (r != -1)
+		fnr = fngetinput(info);
+		if (fnr != -1)
 		{
-			fnset_info(info, av);
-			builtin_ret = fn_fnd_builtin(info);
-			if (builtin_ret == -1)
+			fnset_info(info, fnav);
+			fnbuiltin_ret = fn_fnd_builtin(info);
+			if (fnbuiltin_ret == -1)
 				fn_fnd_command(info);
 		}
 		else if (fninteractive(info))
@@ -34,13 +34,13 @@ int fnhsh(fninfopass_t *info, char **av)
 	fnfree_info(info, 1);
 	if (!fninteractive(info) && info->fnstatus)
 		exit(info->fnstatus);
-	if (builtin_ret == -2)
+	if (fnbuiltin_ret == -2)
 	{
 		if (info->fnerr_num == -1)
 			exit(info->fnstatus);
 		exit(info->fnerr_num);
 	}
-	return (builtin_ret);
+	return (fnbuiltin_ret);
 }
 
 /**
@@ -54,7 +54,7 @@ int fnhsh(fninfopass_t *info, char **av)
  */
 int fn_fnd_builtin(fninfopass_t *info)
 {
-	int i, built_in_ret = -1;
+	int fni, fnbuilt_in_ret = -1;
 	fn_builtin_t builtintbl[] = {
 		{"exit", _fnexit},
 		{"fnenv", _fnenv},
@@ -67,14 +67,14 @@ int fn_fnd_builtin(fninfopass_t *info)
 		{NULL, NULL}
 	};
 
-	for (i = 0; builtintbl[i].type; i++)
-		if (_fn_strncmp(info->fnargv[0], builtintbl[i].type) == 0)
+	for (fni = 0; builtintbl[fni].type; fni++)
+		if (_fn_strncmp(info->fnargv[0], builtintbl[fni].type) == 0)
 		{
 			info->fnline_count++;
-			built_in_ret = builtintbl[i].func(info);
+			fnbuilt_in_ret = builtintbl[fni].func(info);
 			break;
 		}
-	return (built_in_ret);
+	return (fnbuilt_in_ret);
 }
 
 /**
@@ -86,7 +86,7 @@ int fn_fnd_builtin(fninfopass_t *info)
 void fn_fnd_command(fninfopass_t *info)
 {
 	char *fnpath = NULL;
-	int i, k;
+	int fni, fnk;
 
 	info->fnpath = info->fnargv[0];
 	if (info->fnlinecount_flag == 1)
@@ -94,10 +94,10 @@ void fn_fnd_command(fninfopass_t *info)
 		info->fnline_count++;
 		info->fnlinecount_flag = 0;
 	}
-	for (i = 0, k = 0; info->fnarg[i]; i++)
-		if (!fnisdelim(info->fnarg[i], " \t\n"))
-			k++;
-	if (!k)
+	for (fni = 0, fnk = 0; info->fnarg[fni]; fni++)
+		if (!fnisdelim(info->fnarg[fni], " \t\n"))
+			fnk++;
+	if (!fnk)
 		return;
 
 	fnpath = fn_fnd_path(info, _fngetenv(info, "PATH="), info->fnargv[0]);
