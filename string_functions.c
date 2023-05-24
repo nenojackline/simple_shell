@@ -23,7 +23,8 @@ int _fn_strnlen(char *fns)
  * @fns1: the first strang
  * @fns2: the second strang
  *
- * Return: negative if fns1 < fns2, positive if fns1 > fns2, zero if fns1 == fns2
+ * Return: negative if fns1 < fns2, positive if fns1 > fns2,
+ * zero if fns1 == fns2
  */
 int _fn_strncmp(char *fns1, char *fns2)
 {

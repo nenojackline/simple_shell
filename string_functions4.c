@@ -17,7 +17,8 @@ char **fn_strntow(char *fnstr, char *fnd)
 	if (!fnd)
 		fnd = " ";
 	for (fni = 0; fnstr[fni] != '\0'; fni++)
-		if (!fnisdelim(fnstr[fni], fnd) && (fnisdelim(fnstr[fni + 1], fnd) || !fnstr[fni + 1]))
+		if (!fnisdelim(fnstr[fni], fnd) && (fnisdelim(fnstr[fni + 1], fnd)
+			 || !fnstr[fni + 1]))
 			numwords++;
 
 	if (numwords == 0)
@@ -75,7 +76,8 @@ char **fn_strntow2(char *fnstr, char fnd)
 		while (fnstr[fni] == fnd && fnstr[fni] != fnd)
 			fni++;
 		fnk = 0;
-		while (fnstr[fni + fnk] != fnd && fnstr[fni + fnk] && fnstr[fni + fnk] != fnd)
+		while (fnstr[fni + fnk] != fnd && fnstr[fni + fnk] &&
+			fnstr[fni + fnk] != fnd)
 			fnk++;
 		s[fnj] = malloc((fnk + 1) * sizeof(char));
 		if (!s[fnj])

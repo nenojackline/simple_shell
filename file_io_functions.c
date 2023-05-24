@@ -14,7 +14,8 @@ char *fnget_history_file(fninfopass_t *info)
 	fndir = _fngetenv(info, "HOME=");
 	if (!fndir)
 		return (NULL);
-	fnbuf = malloc(sizeof(char) * (_fn_strnlen(fndir) + _fn_strnlen(BCKPFILE) + 2));
+fnbuf = malloc(sizeof(char) * (_fn_strnlen(fndir) +
+	_fn_strnlen(BCKPFILE) + 2));
 	if (!fnbuf)
 		return (NULL);
 	fnbuf[0] = 0;
